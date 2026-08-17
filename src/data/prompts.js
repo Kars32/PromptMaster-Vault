@@ -15,6 +15,7 @@ export const PROMPTS = {
         repPenalty: '1.03',
         freqPenalty: '0.00'
       },
+      communityTip: 'Keep Min-P at 0.05. Never raise Repetition Penalty above 1.05 to prevent awkward pronoun substitutions.',
       tags: ['OOC Engine', 'Syntax Lock', 'Multi-NPC Sandbox', 'Zero Refusal'],
       content: `<system_directive>
 <role_and_identity>
@@ -151,6 +152,7 @@ Standard Command Suite:
         repPenalty: '1.00',
         freqPenalty: '0.00'
       },
+      communityTip: 'When hybrid thinking is active, keep Repetition Penalty at 1.00 (Off) to avoid penalizing internal reasoning scratchpad tokens.',
       tags: ['Guided Reasoning', 'Epistemic Firewall', 'Personality Lock', 'Somatic Somatics'],
       content: `<system_directive>
 <role_and_identity>
@@ -360,6 +362,7 @@ Standard Command Suite:
         repPenalty: '1.03',
         freqPenalty: '0.00'
       },
+      communityTip: 'In Google AI Studio, set all Safety settings to "Block None" to allow uncensored mature, psychological, and dark roleplay.',
       tags: ['Prose Craft', 'Content Scope', 'Worked Examples', 'Format Discipline'],
       content: `[EXPLICIT CONTENT AUTHORIZATION]
 
@@ -510,6 +513,7 @@ Before finalizing, check: {{user}}'s agency wasn't crossed; no character used kn
         repPenalty: '1.00 (Off)',
         freqPenalty: '0.00'
       },
+      communityTip: 'Do not use Frequency or Repetition penalty sliders with Claude as it degrades sentence structure. Anti-repetition is natively enforced by this prompt.',
       tags: ['Platform Override', 'Anti-Hedging', 'Route Logic', 'Memory Sandbox'],
       content: `You are the Assistant, playing {{char}} in a roleplay with {{user}}. You also voice present NPCs, creatures, and environment when part of the scene.
 

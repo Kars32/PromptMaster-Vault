@@ -120,6 +120,12 @@ export default function PromptCard({ prompt, index }) {
                 <span className="font-mono font-bold text-stone-900">{prompt.samplers.freqPenalty || '0.00'}</span>
               </div>
             </div>
+
+            {prompt.communityTip && (
+              <p className="mt-2.5 text-[11px] text-stone-600 leading-relaxed bg-white/70 p-2 rounded-lg border border-stone-200/50">
+                <strong className="text-stone-900 font-semibold">Community Note:</strong> {prompt.communityTip}
+              </p>
+            )}
           </div>
         )}
       </div>
