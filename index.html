@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PromptMaster Vault — Production System Prompts & Architectures</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Production-grade System Prompts, Cognitive Blueprints & Roleplay Architectures for Gemini and Claude.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Base Theme Stylesheet -->
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+  
+  <!-- Custom Porcelain & Warm Slate Design System (StyleSeed & Antigravity Compliant) -->
+  <style>
+    :root {
+      --theme-color: #B45309;
+      --bg-porcelain: #FAFAF9;
+      --bg-card: #FFFFFF;
+      --text-charcoal: #1C1917;
+      --text-muted: #78716C;
+      --border-subtle: #E7E5E4;
+      --code-bg: #F8FAFC;
+      --font-body: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    body {
+      background-color: var(--bg-porcelain) !important;
+      color: var(--text-charcoal) !important;
+      font-family: var(--font-body) !important;
+      font-size: 15px !important;
+      line-height: 1.7 !important;
+      overflow-x: clip !important;
+    }
+
+    /* Sidebar Styling */
+    .sidebar {
+      background-color: #F5F5F4 !important;
+      border-right: 1px solid var(--border-subtle) !important;
+      color: var(--text-charcoal) !important;
+      padding-top: 24px !important;
+    }
+
+    .sidebar-nav {
+      padding: 0 16px !important;
+    }
+
+    .sidebar-nav strong {
+      display: block;
+      margin-top: 20px;
+      margin-bottom: 8px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .sidebar-nav ul {
+      margin: 0 !important;
+      padding-left: 0 !important;
+      list-style: none !important;
+    }
+
+    .sidebar-nav li {
+      margin: 4px 0 !important;
+    }
+
+    .sidebar-nav a {
+      color: #44403C !important;
+      font-size: 13.5px !important;
+      font-weight: 500 !important;
+      text-decoration: none !important;
+      padding: 6px 12px !important;
+      border-radius: 6px !important;
+      display: block !important;
+      transition: all 0.2s ease-out !important;
+    }
+
+    .sidebar-nav a:hover {
+      background-color: rgba(28, 25, 23, 0.05) !important;
+      color: var(--text-charcoal) !important;
+    }
+
+    .sidebar-nav li.active > a {
+      background-color: #FFFFFF !important;
+      color: var(--theme-color) !important;
+      font-weight: 600 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(0, 0, 0, 0.02) !important;
+      border: 1px solid rgba(28, 25, 23, 0.06) !important;
+    }
+
+    /* Main Content Area */
+    .content {
+      padding-top: 20px !important;
+    }
+
+    .markdown-section {
+      max-width: 860px !important;
+      padding: 30px 40px !important;
+    }
+
+    /* Typography */
+    .markdown-section h1 {
+      font-size: 28px !important;
+      font-weight: 700 !important;
+      letter-spacing: -0.02em !important;
+      color: var(--text-charcoal) !important;
+      margin-bottom: 16px !important;
+      border-bottom: none !important;
+    }
+
+    .markdown-section h2 {
+      font-size: 20px !important;
+      font-weight: 600 !important;
+      letter-spacing: -0.01em !important;
+      color: var(--text-charcoal) !important;
+      margin-top: 36px !important;
+      margin-bottom: 12px !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      padding-bottom: 8px !important;
+    }
+
+    .markdown-section h3 {
+      font-size: 16px !important;
+      font-weight: 600 !important;
+      color: var(--text-charcoal) !important;
+      margin-top: 24px !important;
+    }
+
+    /* Blockquotes / Callout Cards */
+    .markdown-section blockquote {
+      background-color: var(--bg-card) !important;
+      border-left: 3px solid var(--theme-color) !important;
+      border-radius: 0 8px 8px 0 !important;
+      color: #44403C !important;
+      padding: 14px 20px !important;
+      margin: 20px 0 !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 4px 12px rgba(0, 0, 0, 0.02) !important;
+      border-top: 1px solid var(--border-subtle) !important;
+      border-right: 1px solid var(--border-subtle) !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+    }
+
+    /* Tables */
+    .markdown-section table {
+      width: 100% !important;
+      border-collapse: collapse !important;
+      background-color: var(--bg-card) !important;
+      border-radius: 8px !important;
+      overflow: hidden !important;
+      border: 1px solid var(--border-subtle) !important;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+      margin: 20px 0 !important;
+    }
+
+    .markdown-section th {
+      background-color: #F5F5F4 !important;
+      color: var(--text-charcoal) !important;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      padding: 12px 16px !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      text-align: left !important;
+    }
+
+    .markdown-section td {
+      padding: 12px 16px !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      border-top: none !important;
+      border-left: none !important;
+      border-right: none !important;
+      font-size: 13.5px !important;
+    }
+
+    /* Code Blocks & One-Click Copy */
+    .markdown-section pre {
+      background-color: var(--code-bg) !important;
+      border: 1px solid rgba(28, 25, 23, 0.08) !important;
+      border-radius: 8px !important;
+      padding: 20px !important;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02) !important;
+      position: relative !important;
+    }
+
+    .markdown-section code {
+      font-family: var(--font-mono) !important;
+      font-size: 13px !important;
+      line-height: 1.6 !important;
+    }
+
+    .markdown-section :not(pre) > code {
+      background-color: #F3F4F6 !important;
+      color: #C2410C !important;
+      padding: 2px 6px !important;
+      border-radius: 4px !important;
+      font-size: 12.5px !important;
+      border: 1px solid rgba(0,0,0,0.05) !important;
+    }
+
+    /* Custom Copy Button Styling */
+    .docsify-copy-code-button {
+      background-color: #FFFFFF !important;
+      color: #44403C !important;
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 6px !important;
+      font-family: var(--font-body) !important;
+      font-size: 12px !important;
+      font-weight: 600 !important;
+      padding: 6px 12px !important;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+      transition: all 0.2s ease-out !important;
+      top: 10px !important;
+      right: 10px !important;
+      cursor: pointer !important;
+    }
+
+    .docsify-copy-code-button:hover {
+      background-color: #F5F5F4 !important;
+      color: var(--text-charcoal) !important;
+      border-color: #D6D3D1 !important;
+    }
+
+    /* Search Bar */
+    .search {
+      padding: 0 16px 16px 16px !important;
+      border-bottom: 1px solid var(--border-subtle) !important;
+      margin-bottom: 12px !important;
+    }
+
+    .search input {
+      border: 1px solid var(--border-subtle) !important;
+      border-radius: 6px !important;
+      padding: 8px 12px !important;
+      font-family: var(--font-body) !important;
+      font-size: 13px !important;
+      background-color: #FFFFFF !important;
+      color: var(--text-charcoal) !important;
+      outline: none !important;
+    }
+
+    .search input:focus {
+      border-color: var(--theme-color) !important;
+      box-shadow: 0 0 0 2px rgba(180, 83, 9, 0.1) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Loading PromptMaster Vault...</div>
+  <script>
+    window.$docsify = {
+      name: 'PromptMaster Vault',
+      repo: 'https://github.com/Kars32/PromptMaster-Vault',
+      loadSidebar: true,
+      subMaxLevel: 2,
+      auto2top: true,
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Search system prompts...',
+        noData: 'No matching prompts found.',
+        depth: 3
+      },
+      copyCode: {
+        buttonText: 'Copy Prompt',
+        errorText: 'Error',
+        successText: 'Copied!'
+      }
+    }
+  </script>
+  <!-- Docsify Core -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+  <!-- Search Plugin -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  <!-- Copy Code Plugin -->
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <!-- Prism Syntax Highlighting -->
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-markup.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-markdown.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-yaml.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-json.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+</body>
+</html>
