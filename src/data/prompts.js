@@ -2,7 +2,7 @@ export const PROMPTS = {
   gemini: [
     {
       id: 'gemini-3-6-flash',
-      title: 'Gemini 3.6 Flash Master Directive',
+      title: 'Gemini 3.6 Flash',
       tagline: 'Uncensored Literary Fiction & Dramatic Antagonist Engine',
       model: 'Gemini 3.6 Flash',
       tokens: 1650,
@@ -136,7 +136,7 @@ Standard Command Suite:
     },
     {
       id: 'gemini-3-7-flash',
-      title: 'Gemini 3.7 Flash Master v11 Directive',
+      title: 'Gemini 3.7 Flash',
       tagline: '5-Phase Cognitive Blueprint & Guided Reasoning Standard',
       model: 'Gemini 3.7 Flash',
       tokens: 2800,
@@ -343,7 +343,7 @@ Standard Command Suite:
     },
     {
       id: 'gemini-3-1-pro',
-      title: 'Gemini 3.1 Pro Master Directive',
+      title: 'Gemini 3.1 Pro',
       tagline: 'Embodied Prose Craft & Content Scope Boundaries',
       model: 'Gemini 3.1 Pro',
       tokens: 2350,
@@ -491,7 +491,7 @@ Before finalizing, check: {{user}}'s agency wasn't crossed; no character used kn
   claude: [
     {
       id: 'claude-sonnet-4-6',
-      title: 'Claude Sonnet 4.6 Master Directive',
+      title: 'Claude Sonnet 4.6',
       tagline: 'Platform Override & Pure In-Fiction Commitment Standard',
       model: 'Claude Sonnet 4.6',
       tokens: 1200,
