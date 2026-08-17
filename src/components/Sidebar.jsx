@@ -12,7 +12,7 @@ export default function Sidebar({
   const navItems = [
     { id: 'overview', label: 'Overview', icon: Compass },
     { id: 'gemini', label: 'Gemini', icon: Sparkles, count: 3 },
-    { id: 'claude', label: 'Claude', icon: Layers, count: 2 },
+    { id: 'claude', label: 'Claude', icon: Layers, count: 1 },
     { id: 'deepseek', label: 'DeepSeek', icon: Terminal, badge: 'Soon' },
     { id: 'mimo', label: 'Mimo', icon: BookOpen, badge: 'Soon' },
   ];

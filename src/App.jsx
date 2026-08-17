@@ -128,7 +128,7 @@ export default function App() {
                     }}
                     className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
                   >
-                    Claude Prompts (2)
+                    Claude Prompts (1)
                     <ArrowRight className="w-4 h-4 text-stone-400" />
                   </button>
                 </div>
