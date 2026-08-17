@@ -90,14 +90,36 @@ export default function PromptCard({ prompt, index }) {
 
         {/* Sampler Quick Settings */}
         {prompt.samplers && (
-          <div className="mt-4 pt-4 border-t border-stone-100 flex flex-wrap items-center gap-x-5 gap-y-1 text-xs text-stone-600">
-            <span className="font-semibold text-stone-900">Recommended Settings:</span>
-            <span>Temperature: <strong className="font-mono text-stone-900">{prompt.samplers.temp}</strong></span>
-            <span>Top-P: <strong className="font-mono text-stone-900">{prompt.samplers.topP}</strong></span>
-            <span>Min-P: <strong className="font-mono text-stone-900">{prompt.samplers.minP}</strong></span>
-            {prompt.samplers.repPenalty && (
-              <span>Rep-Penalty: <strong className="font-mono text-stone-900">{prompt.samplers.repPenalty}</strong></span>
-            )}
+          <div className="mt-5 p-3.5 rounded-xl bg-stone-100/70 border border-stone-200/60">
+            <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider block mb-2 font-mono">
+              Empirical Sampler Calibration
+            </span>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs">
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
+                <span className="text-[10px] text-stone-600 block font-medium">Temperature</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.temp}</span>
+              </div>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
+                <span className="text-[10px] text-stone-600 block font-medium">Top-P</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.topP}</span>
+              </div>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
+                <span className="text-[10px] text-stone-600 block font-medium">Top-K</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.topK || 'Off'}</span>
+              </div>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
+                <span className="text-[10px] text-stone-600 block font-medium">Min-P</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.minP}</span>
+              </div>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
+                <span className="text-[10px] text-stone-600 block font-medium">Rep. Penalty</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.repPenalty}</span>
+              </div>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
+                <span className="text-[10px] text-stone-600 block font-medium">Freq. Penalty</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.freqPenalty || '0.00'}</span>
+              </div>
+            </div>
           </div>
         )}
       </div>

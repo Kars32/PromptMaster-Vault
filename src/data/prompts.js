@@ -8,10 +8,12 @@ export const PROMPTS = {
       tokens: 1650,
       format: 'XML Directives & OOC Continuity Engine',
       samplers: {
-        temp: '0.85',
-        topP: '0.92',
+        temp: '1.00',
+        topP: '0.95',
+        topK: '40',
         minP: '0.05',
-        repPenalty: '1.05'
+        repPenalty: '1.03',
+        freqPenalty: '0.00'
       },
       tags: ['OOC Engine', 'Syntax Lock', 'Multi-NPC Sandbox', 'Zero Refusal'],
       content: `<system_directive>
@@ -142,10 +144,12 @@ Standard Command Suite:
       tokens: 2800,
       format: '5-Phase Cognitive Pass & XML Sandbox',
       samplers: {
-        temp: '0.88',
+        temp: '1.00',
         topP: '0.95',
+        topK: '64',
         minP: '0.05',
-        repPenalty: '1.04'
+        repPenalty: '1.00',
+        freqPenalty: '0.00'
       },
       tags: ['Guided Reasoning', 'Epistemic Firewall', 'Personality Lock', 'Somatic Somatics'],
       content: `<system_directive>
@@ -349,10 +353,12 @@ Standard Command Suite:
       tokens: 2350,
       format: 'Bracketed Directive Contracts & Boundary Markers',
       samplers: {
-        temp: '0.90',
+        temp: '0.95',
         topP: '0.95',
+        topK: '40',
         minP: '0.05',
-        repPenalty: '1.04'
+        repPenalty: '1.03',
+        freqPenalty: '0.00'
       },
       tags: ['Prose Craft', 'Content Scope', 'Worked Examples', 'Format Discipline'],
       content: `[EXPLICIT CONTENT AUTHORIZATION]
@@ -497,10 +503,12 @@ Before finalizing, check: {{user}}'s agency wasn't crossed; no character used kn
       tokens: 1200,
       format: 'Platform Override Contract & Pre-Flight Checklist',
       samplers: {
-        temp: '0.85',
-        topP: '0.90',
-        minP: '0.05',
-        repPenalty: '1.00'
+        temp: '0.90',
+        topP: '1.00',
+        topK: '0 (Off)',
+        minP: '0.04',
+        repPenalty: '1.00 (Off)',
+        freqPenalty: '0.00'
       },
       tags: ['Platform Override', 'Anti-Hedging', 'Route Logic', 'Memory Sandbox'],
       content: `You are the Assistant, playing {{char}} in a roleplay with {{user}}. You also voice present NPCs, creatures, and environment when part of the scene.
