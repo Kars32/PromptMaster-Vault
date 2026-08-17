@@ -1,38 +1,37 @@
-# PromptMaster Vault
+# ⚔️ Prompt Knight
 
-> **SYSTEM CLASSIFICATION**: Curated Roleplay Architectures & Master System Prompts  
-> **MAINTAINED BY**: Kars · Prompt Engineering & Roleplay Systems  
-> **DESIGN STANDARD**: StyleSeed & CKW Monochromatic Editorial
-
----
-
-## Welcome to the Vault
-
-The **PromptMaster Vault** is a streamlined, zero-bloat repository of production-tested system prompts engineered for frontier large language models.
-
-Standard assistant instructions often sanitize fiction, collapse multi-character scenes into chaos, or speak on behalf of the user. The architectures in this vault strictly enforce:
-* **Fictional Isolation**: Quarantine storytelling from real-world refusals and moralizing disclaimers.
-* **Anti-Puppeting**: Zero tolerance for models generating actions, thoughts, or dialogue for `{{user}}`.
-* **Epistemic Firewalls**: Prevents telepathic knowledge bleed across multiple NPCs.
-* **Somatic Prose**: Unrushed, visceral, sensory-rich literature.
+> **Curated Roleplay System Prompts & Empirical Sampler Architectures**  
+> **Maintained By**: Kars  
+> **Live Site**: [https://prompt-knight-kohl.vercel.app/](https://prompt-knight-kohl.vercel.app/) *(Mirror: [GitHub Pages](https://kars32.github.io/PromptMaster-Vault/))*
 
 ---
 
-## Model Suites
+## Overview
 
-Click any tab in the navigation bar to access the master directives:
+**Prompt Knight** is a clean, zero-bloat repository of tested roleplay system prompts engineered for frontier LLMs (Gemini and Claude).
 
-| Suite | Included Architectures | Focus |
-| :--- | :--- | :--- |
-| **[Gemini](gemini.md)** | `Gemini 3.6 Flash`, `Gemini 3.7 Flash (v11)`, `Gemini 3.1 Pro` | Cognitive blueprints, OOC engines, somatic physics |
-| **[Claude](claude.md)** | `Claude Sonnet 4.6`, `Claude 3.5/3.7 Master XML` | Native XML parsing, pre-flight verification, platform overrides |
-| **[DeepSeek](deepseek.md)** | *Coming Soon* | DeepSeek V3 / R1 reasoning sandbox architectures |
-| **[Mimo](mimo.md)** | *Coming Soon* | High-context MiniMax / Mimo roleplay presets |
+Standard assistant setups often sanitize storytelling, collapse multi-character scenes, or speak on behalf of the user. Prompt Knight prompts strictly enforce:
+* **Anti-Puppeting**: Zero tolerance for models generating actions, thoughts, or speech for `{{user}}`.
+* **Fictional Isolation**: Uninhibited creative writing without moralizing preachiness or unsolicited safety lectures.
+* **Epistemic Firewalls**: Prevents NPCs from telepathically knowing private secrets or off-screen events.
+* **Somatic Immersion**: Natural, sensory-rich prose and unhurried character progression.
+
+---
+
+## Active Model Prompts
+
+| Suite | Model | Features | Recommended Samplers |
+| :--- | :--- | :--- | :--- |
+| **Gemini** | **Gemini 3.6 Flash** | XML directives, OOC continuity engine, dramatic antagonist roleplay | `Temp: 1.00`, `Top-P: 0.95`, `Top-K: 40`, `Min-P: 0.05` |
+| **Gemini** | **Gemini 3.7 Flash** | 5-phase cognitive pass & guided reasoning standard | `Temp: 1.00`, `Top-P: 0.95`, `Top-K: 64`, `Min-P: 0.05`, `Rep: 1.00 (Off)` |
+| **Gemini** | **Gemini 3.1 Pro** | Embodied prose craft, high-parameter literary fiction | `Temp: 0.95`, `Top-P: 0.95`, `Top-K: 40`, `Min-P: 0.05` |
+| **Claude** | **Claude Sonnet 4.6** | Platform override, in-fiction commitment, anti-hedging rules | `Temp: 0.90`, `Top-P: 1.00`, `Top-K: 0 (Off)`, `Min-P: 0.04`, `Penalties: 0.00` |
 
 ---
 
 ## How to Use
 
-1. Click **Copy Prompt** on the top right of any prompt block.
-2. In **SillyTavern** or **Janitor AI**, paste directly into your `System Prompt` or `Main Prompt` box.
-3. Configure the recommended **Temperature** and **Min-P** settings listed on each card for optimal output.
+1. Go to **[https://prompt-knight-kohl.vercel.app/](https://prompt-knight-kohl.vercel.app/)**.
+2. Select your model and click **Copy Prompt**.
+3. In **SillyTavern** or **Janitor AI**, paste directly into your **System Prompt** or **Main Prompt**.
+4. Configure the calibrated sampler sliders listed on each card.
