@@ -32,8 +32,9 @@
 ### Colors
 * **Page Background**: Warm porcelain `#FAFAF8`
 * **Card Surfaces**: Pure white `#FFFFFF` with `border: 1px solid rgba(0, 0, 0, 0.08)`
-* **Codeblock Container**: Dark Obsidian `#18181B` with `#121214` header bar and `#141416` footer
+* **Codeblock Container**: Sleek light stone `#F7F7F5` with `#EEEEEC` header/footer bars and `border-stone-200`
 * **Primary Text**: Deep Obsidian `#18181B` / `#09090B`
+* **Code Text**: Obsidian Charcoal `#27272A` / `#18181B` font-mono
 * **Muted Text**: Stone gray `#71717A`
 * **Accent & Buttons**: Solid Obsidian `#18181B` (Hover: `#000000`)
 * **Success Feedback**: Emerald `#10B981` (Copy confirmation)

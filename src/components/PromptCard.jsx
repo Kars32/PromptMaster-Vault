@@ -132,77 +132,74 @@ export default function PromptCard({ prompt, index }) {
         )}
       </div>
 
-      {/* Codeblock Container */}
-      <div className="bg-[#18181B] text-stone-100 border-t border-stone-800">
-        {/* Codeblock Header Bar */}
-        <div className="flex items-center justify-between px-4 py-2.5 bg-[#121214] border-b border-stone-800/80 text-xs font-mono text-stone-400">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-stone-700 inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-stone-700 inline-block" />
-              <span className="w-2.5 h-2.5 rounded-full bg-stone-700 inline-block" />
+      {/* Sleek Squarish Codeblock with Curved Edges (Theme Matched) */}
+      <div className="p-6 md:p-8 pt-0">
+        <div className="rounded-xl border border-stone-200/90 bg-[#F7F7F5] overflow-hidden shadow-2xs">
+          {/* Codeblock Top Bar */}
+          <div className="flex items-center justify-between px-4 py-2.5 bg-[#EEEEEC] border-b border-stone-200 text-xs font-mono text-stone-600">
+            <div className="flex items-center gap-2">
+              <span className="text-stone-900 font-bold flex items-center gap-1.5 text-[11px]">
+                <Terminal className="w-3.5 h-3.5 text-stone-500" />
+                {prompt.id}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
+              </span>
             </div>
-            <span className="text-stone-300 font-medium ml-2 flex items-center gap-1 text-[11px]">
-              <Terminal className="w-3 h-3 text-stone-500" />
-              {prompt.id}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
-            </span>
+
+            <div className="flex items-center gap-3">
+              <span className="text-[11px] text-stone-500 font-medium hidden sm:inline">
+                {prompt.format}
+              </span>
+              <button
+                onClick={handleCopy}
+                className="text-[11px] font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors px-2 py-0.5 rounded hover:bg-stone-200/70"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-700">Copied</span>
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-3 h-3 text-stone-500" />
+                    Copy
+                  </>
+                )}
+              </button>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <span className="text-[11px] text-stone-500 hidden sm:inline">
-              {prompt.format}
+          {/* Codeblock Viewport */}
+          <div
+            className={`font-mono text-xs text-stone-800 p-4 sm:p-5 overflow-x-auto ${
+              isExpanded ? 'max-h-none' : 'max-h-60 overflow-hidden'
+            }`}
+          >
+            <pre className="leading-relaxed whitespace-pre font-mono">
+              <code>{prompt.content}</code>
+            </pre>
+          </div>
+
+          {/* Codeblock Bottom Bar */}
+          <div className="flex items-center justify-between px-4 py-2 border-t border-stone-200/80 bg-[#EEEEEC]">
+            <span className="text-xs text-stone-500 font-mono">
+              {lines.length} lines · {prompt.tokens.toLocaleString()} tokens
             </span>
             <button
-              onClick={handleCopy}
-              className="text-[11px] text-stone-300 hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors"
             >
-              {copied ? (
+              {isExpanded ? (
                 <>
-                  <Check className="w-3 h-3 text-emerald-400" />
-                  Copied
+                  Collapse
+                  <ChevronUp className="w-3.5 h-3.5 text-stone-500" />
                 </>
               ) : (
                 <>
-                  <Copy className="w-3 h-3 text-stone-400" />
-                  Copy
+                  View Full ({lines.length} lines)
+                  <ChevronDown className="w-3.5 h-3.5 text-stone-500" />
                 </>
               )}
             </button>
           </div>
-        </div>
-
-        {/* Codeblock Viewport */}
-        <div
-          className={`font-mono text-xs text-stone-200 p-4 sm:p-6 overflow-x-auto ${
-            isExpanded ? 'max-h-none' : 'max-h-64 overflow-hidden'
-          }`}
-        >
-          <pre className="leading-relaxed whitespace-pre font-mono">
-            <code>{prompt.content}</code>
-          </pre>
-        </div>
-
-        {/* Expand / Collapse Tray */}
-        <div className="flex items-center justify-between px-6 py-2.5 border-t border-stone-800/80 bg-[#141416]">
-          <span className="text-xs text-stone-500 font-mono">
-            {lines.length} lines · {prompt.tokens.toLocaleString()} tokens
-          </span>
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-xs font-semibold text-stone-300 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
-          >
-            {isExpanded ? (
-              <>
-                Collapse Codeblock
-                <ChevronUp className="w-3.5 h-3.5 text-stone-400" />
-              </>
-            ) : (
-              <>
-                Expand Full Codeblock ({lines.length} lines)
-                <ChevronDown className="w-3.5 h-3.5 text-stone-400" />
-              </>
-            )}
-          </button>
         </div>
       </div>
     </div>
