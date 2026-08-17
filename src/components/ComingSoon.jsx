@@ -1,47 +1,39 @@
 import React from 'react';
+import { Clock, Hammer } from 'lucide-react';
 
-export default function ComingSoon({ suiteName, targetModel, overview, plannedDirectives }) {
+export default function ComingSoon({ suiteName, description, plannedPrompts }) {
   return (
-    <div className="surface-card rounded-xl p-8 md:p-12 max-w-3xl mx-auto my-6 border border-stone-200">
-      <div className="flex items-center gap-3 mb-4">
-        <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded bg-stone-100 text-stone-700 uppercase tracking-wider">
-          Calibration in Progress
-        </span>
-        <span className="text-xs text-stone-400 font-mono">
-          Target: {targetModel}
-        </span>
+    <div className="bg-white rounded-2xl border border-stone-200 p-8 md:p-12 text-center max-w-xl mx-auto shadow-xs my-8">
+      <div className="w-12 h-12 rounded-2xl bg-stone-100 text-stone-700 flex items-center justify-center mx-auto mb-4">
+        <Hammer className="w-6 h-6" />
       </div>
 
-      <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-stone-950 mb-3">
-        {suiteName} Directive Suite
+      <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-stone-100 text-stone-700 mb-3">
+        <Clock className="w-3.5 h-3.5" />
+        Coming Soon
+      </div>
+
+      <h2 className="text-2xl font-bold text-stone-900 mb-2">
+        {suiteName} Prompts
       </h2>
 
-      <p className="text-stone-600 text-sm md:text-base leading-relaxed mb-8 font-editorial italic text-base">
-        {overview}
+      <p className="text-sm text-stone-600 mb-6 leading-relaxed">
+        {description}
       </p>
 
-      <div className="border-t border-stone-200/80 pt-6">
-        <h3 className="text-xs font-mono font-bold uppercase tracking-wider text-stone-900 mb-4">
-          Directives in Benchmarking
-        </h3>
-        <div className="space-y-4">
-          {plannedDirectives.map((item, idx) => (
-            <div key={idx} className="p-4 rounded-lg bg-stone-50 border border-stone-200/60 flex items-start gap-4">
-              <span className="font-mono text-xs font-semibold text-stone-400 mt-0.5">
-                0{idx + 1}
+      {plannedPrompts && plannedPrompts.length > 0 && (
+        <div className="text-left bg-stone-50 rounded-xl p-4 border border-stone-200/80 text-xs text-stone-700 space-y-2">
+          <strong className="text-stone-900 block font-semibold mb-1">In Development:</strong>
+          {plannedPrompts.map((p, idx) => (
+            <div key={idx} className="flex items-start gap-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-stone-400 mt-1.5 shrink-0" />
+              <span>
+                <strong>{p.name}</strong>: {p.desc}
               </span>
-              <div>
-                <strong className="text-sm font-semibold text-stone-900 block mb-1">
-                  {item.title}
-                </strong>
-                <p className="text-xs text-stone-600 leading-relaxed">
-                  {item.detail}
-                </p>
-              </div>
             </div>
           ))}
         </div>
-      </div>
+      )}
     </div>
   );
 }

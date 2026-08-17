@@ -1,18 +1,18 @@
 import React, { useState, useMemo } from 'react';
 import { PROMPTS } from './data/prompts';
+import Sidebar from './components/Sidebar';
 import PromptCard from './components/PromptCard';
-import VariableToolbar from './components/VariableToolbar';
 import ComingSoon from './components/ComingSoon';
-import { Search, Compass, Sparkles, Layers, Terminal, BookOpen, ExternalLink } from 'lucide-react';
+import { Search, Menu, PanelLeftOpen, ArrowRight, CheckCircle2, Shield, Users, Sparkles, ExternalLink } from 'lucide-react';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('overview'); // 'overview', 'gemini', 'claude', 'deepseek', 'mimo'
   const [searchQuery, setSearchQuery] = useState('');
-  const [charName, setCharName] = useState('{{char}}');
-  const [userName, setUserName] = useState('{{user}}');
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  // Filter prompts
-  const activePrompts = useMemo(() => {
+  // Filter prompts based on active tab and search query
+  const currentPrompts = useMemo(() => {
     if (activeTab !== 'gemini' && activeTab !== 'claude') return [];
     const list = PROMPTS[activeTab] || [];
     if (!searchQuery.trim()) return list;
@@ -26,295 +26,273 @@ export default function App() {
     );
   }, [activeTab, searchQuery]);
 
-  const tabs = [
-    { id: 'overview', index: '01', label: 'Overview' },
-    { id: 'gemini', index: '02', label: 'Gemini', count: 3 },
-    { id: 'claude', index: '03', label: 'Claude', count: 2 },
-    { id: 'deepseek', index: '04', label: 'DeepSeek', badge: 'Soon' },
-    { id: 'mimo', index: '05', label: 'Mimo', badge: 'Soon' },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-col bg-[#FAFAF8] text-[#18181B] font-sans">
-      {/* Editorial Header */}
-      <header className="border-b border-stone-200/80 bg-white/90 backdrop-blur-md sticky top-0 z-40">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-          <div className="flex items-baseline gap-3">
+    <div className="min-h-screen flex bg-[#FAFAF8] text-[#18181B] font-sans antialiased overflow-x-clip">
+      {/* Retractable Left Sidebar */}
+      <Sidebar
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        isOpen={sidebarOpen}
+        setIsOpen={setSidebarOpen}
+        isMobileOpen={mobileSidebarOpen}
+        setIsMobileOpen={setMobileSidebarOpen}
+      />
+
+      {/* Main Content Layout Container */}
+      <div
+        className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ease-in-out ${
+          sidebarOpen ? 'md:ml-64' : 'md:ml-0'
+        }`}
+      >
+        {/* Top Header Bar */}
+        <header className="sticky top-0 z-30 bg-white/90 backdrop-blur-md border-b border-stone-200/80 h-16 px-4 sm:px-8 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* Mobile Hamburger Button */}
             <button
-              onClick={() => setActiveTab('overview')}
-              className="text-lg font-bold tracking-tight text-stone-950 font-sans cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => setMobileSidebarOpen(true)}
+              className="md:hidden p-2 rounded-xl text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition-colors cursor-pointer"
+              title="Open Navigation"
             >
-              PROMPT KNIGHT
+              <Menu className="w-5 h-5" />
             </button>
-            <span className="hidden sm:inline text-xs font-mono text-stone-400">
-              / ROLEPLAY SYSTEM DIRECTIVES
-            </span>
+
+            {/* Desktop Show Sidebar Button (When retracted) */}
+            {!sidebarOpen && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 transition-all cursor-pointer shadow-2xs"
+                title="Show navigation sidebar"
+              >
+                <PanelLeftOpen className="w-4 h-4 text-stone-500" />
+                <span>Show Menu</span>
+              </button>
+            )}
+
+            <div className="flex items-baseline gap-2">
+              <span className="font-extrabold text-stone-950 text-base sm:text-lg tracking-tight">
+                Prompt Knight
+              </span>
+              <span className="text-xs text-stone-600 font-medium hidden sm:inline">
+                / Roleplay Prompts
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-4 text-xs font-mono text-stone-500">
+          {/* Right Header Links */}
+          <div className="flex items-center gap-3 text-xs">
             <a
               href="https://github.com/Kars32/PromptMaster-Vault"
               target="_blank"
               rel="noreferrer"
-              className="hover:text-stone-900 transition-colors flex items-center gap-1"
+              className="px-3 py-1.5 rounded-lg font-medium text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition-colors flex items-center gap-1.5"
             >
-              GitHub
-              <ExternalLink className="w-3 h-3 text-stone-400" />
+              <span>GitHub</span>
+              <ExternalLink className="w-3.5 h-3.5 text-stone-400" />
             </a>
           </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Navigation Sub-Header */}
-      <div className="border-b border-stone-200/80 bg-[#FAFAF8]/95 sticky top-16 z-30 backdrop-blur-sm">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6">
-          <nav className="flex space-x-1 sm:space-x-4 py-2.5 overflow-x-auto no-scrollbar">
-            {tabs.map((tab) => {
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
-                  className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all whitespace-nowrap cursor-pointer flex items-center gap-2 ${
-                    isActive
-                      ? 'bg-stone-900 text-white font-semibold shadow-sm'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-200/60'
-                  }`}
-                >
-                  <span className={isActive ? 'text-stone-400' : 'text-stone-400'}>
-                    {tab.index}
-                  </span>
-                  <span>{tab.label}</span>
-                  {tab.count && (
-                    <span
-                      className={`text-[10px] px-1 py-0.2 rounded font-mono ${
-                        isActive ? 'bg-stone-800 text-stone-300' : 'bg-stone-200 text-stone-600'
-                      }`}
-                    >
-                      {tab.count}
-                    </span>
-                  )}
-                  {tab.badge && (
-                    <span className="text-[9px] uppercase px-1 rounded bg-stone-200/60 text-stone-500 font-mono">
-                      {tab.badge}
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </nav>
-        </div>
-      </div>
-
-      {/* Main Content Viewport */}
-      <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8 md:py-12 flex-1 w-full">
-        {/* Search & Variable Injector for Gemini/Claude */}
-        {(activeTab === 'gemini' || activeTab === 'claude') && (
-          <>
-            <VariableToolbar
-              charName={charName}
-              setCharName={setCharName}
-              userName={userName}
-              setUserName={setUserName}
-            />
-
-            <div className="relative mb-8">
-              <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={`Filter ${activeTab.toUpperCase()} directives by keyword, token limit, or tag...`}
-                className="w-full text-xs font-mono pl-10 pr-4 py-2.5 rounded-lg border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:outline-none transition-all shadow-xs"
-              />
-            </div>
-          </>
-        )}
-
-        {/* TAB 01: OVERVIEW */}
-        {activeTab === 'overview' && (
-          <div className="space-y-12 max-w-4xl mx-auto">
-            {/* Title Section */}
-            <div className="border-b border-stone-200 pb-8">
-              <span className="font-mono text-xs text-stone-500 block mb-2">
-                SYSTEM SPECIFICATION & ARCHITECTURE
-              </span>
-              <h1 className="text-3xl md:text-5xl font-extrabold tracking-tight text-stone-950 font-sans mb-4">
-                Prompt Knight
-              </h1>
-              <p className="text-lg md:text-xl font-editorial text-stone-600 italic leading-relaxed">
-                A repository of zero-compromise prompt systems engineered to bypass assistant moralizing, enforce rigorous anti-puppeting turn boundaries, and eliminate multi-character telepathy.
-              </p>
-            </div>
-
-            {/* Core Architectural Pillars */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="surface-card p-6 rounded-xl border border-stone-200">
-                <span className="font-mono text-xs font-bold text-stone-400 block mb-2">01 // ISOLATION</span>
-                <h2 className="text-sm font-bold text-stone-950 mb-2">Fictional Sandbox Isolation</h2>
-                <p className="text-xs text-stone-600 leading-relaxed font-sans">
-                  Strictly divorces fictional creative writing from real-world refusals, meta-commentary, and unsolicited safety lecturing.
-                </p>
-              </div>
-
-              <div className="surface-card p-6 rounded-xl border border-stone-200">
-                <span className="font-mono text-xs font-bold text-stone-400 block mb-2">02 // AGENCY</span>
-                <h2 className="text-sm font-bold text-stone-950 mb-2">Anti-Puppeting Firewall</h2>
-                <p className="text-xs text-stone-600 leading-relaxed font-sans">
-                  Imposes absolute syntactic barriers stopping models from assuming actions, internal thoughts, or dialogue for <code className="font-mono text-stone-800 bg-stone-100 px-1 py-0.5 rounded text-[11px]">{"{{user}}"}</code>.
-                </p>
-              </div>
-
-              <div className="surface-card p-6 rounded-xl border border-stone-200">
-                <span className="font-mono text-xs font-bold text-stone-400 block mb-2">03 // EPISTEMICS</span>
-                <h2 className="text-sm font-bold text-stone-950 mb-2">Multi-NPC Knowledge Quarantine</h2>
-                <p className="text-xs text-stone-600 leading-relaxed font-sans">
-                  Prevents ambient characters from telepathically knowing private 1-on-1 secrets or off-screen events without in-world proof.
-                </p>
-              </div>
-            </div>
-
-            {/* Mathematical Sampling Formulation (CKW Standard) */}
-            <div className="surface-card p-6 md:p-8 rounded-xl border border-stone-200">
-              <span className="font-mono text-xs font-bold text-stone-400 block mb-2">
-                MATHEMATICAL SAMPLING SPECIFICATION
-              </span>
-              <h2 className="text-base font-bold text-stone-950 mb-3">
-                Softmax Temperature & Min-P Dynamic Truncation
-              </h2>
-              <p className="text-xs text-stone-600 leading-relaxed mb-6 font-sans">
-                Standard Top-P truncation artificially flattens prose diversity in high-probability contexts and allows noise in low-probability tails. Prompt Knight directives are calibrated for <strong>Min-P dynamic truncation</strong>:
-              </p>
-
-              {/* Annotated Formula */}
-              <div className="p-4 rounded-lg bg-stone-50 border border-stone-200 font-mono text-xs text-stone-800 space-y-2 mb-4">
-                <div className="text-sm font-semibold text-stone-950">
-                  P(x_i) = exp(z_i / T) / Σ_j exp(z_j / T)
-                </div>
-                <div className="text-stone-600">
-                  Threshold = p_max · Min-P
-                </div>
-                <div className="text-stone-600">
-                  Candidate Set S = &#123; x_i | P(x_i) ≥ Threshold &#125;
-                </div>
-              </div>
-
-              <div className="text-xs text-stone-500 font-mono space-y-1">
-                <div>• <strong className="text-stone-700">T (Temperature)</strong>: Controls logit entropy before softmax ($T \in [0.85, 0.92]$ recommended).</div>
-                <div>• <strong className="text-stone-700">p_max</strong>: Probability of the top-ranked token candidate in the active vocabulary.</div>
-                <div>• <strong className="text-stone-700">Min-P</strong>: Scaled cutoff factor ($0.05$ recommended), discarding tokens below $5\%$ of the leader's probability.</div>
-              </div>
-            </div>
-
-            {/* Navigation CTA */}
-            <div className="p-6 rounded-xl bg-stone-100 border border-stone-200 flex flex-wrap items-center justify-between gap-4">
-              <div>
-                <strong className="text-sm font-bold text-stone-950 block">Ready to deploy a directive?</strong>
-                <span className="text-xs text-stone-600">Select a model suite from the navigation above.</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => setActiveTab('gemini')}
-                  className="px-4 py-2 rounded-lg bg-stone-900 text-white text-xs font-mono font-semibold hover:bg-black transition-colors cursor-pointer"
-                >
-                  View Gemini (3) →
-                </button>
-                <button
-                  onClick={() => setActiveTab('claude')}
-                  className="px-4 py-2 rounded-lg border border-stone-300 text-stone-800 bg-white text-xs font-mono font-semibold hover:bg-stone-50 transition-colors cursor-pointer"
-                >
-                  View Claude (2) →
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* TAB 02 & 03: GEMINI & CLAUDE */}
-        {(activeTab === 'gemini' || activeTab === 'claude') && (
-          <div>
-            <div className="mb-6 flex items-baseline justify-between border-b border-stone-200 pb-3">
-              <div>
-                <h1 className="text-xl md:text-2xl font-bold tracking-tight text-stone-950 uppercase font-sans">
-                  {activeTab} Directive Suite
-                </h1>
-                <span className="text-xs font-mono text-stone-500">
-                  {activePrompts.length} Verified Production Architectures
+        {/* Main Content Area */}
+        <main className="flex-1 max-w-4xl w-full mx-auto px-4 sm:px-8 py-8 md:py-12">
+          {/* TAB 1: OVERVIEW */}
+          {activeTab === 'overview' && (
+            <div className="space-y-10">
+              {/* Clean Welcome Banner */}
+              <div className="bg-white rounded-3xl border border-stone-200 p-6 sm:p-10 shadow-xs">
+                <span className="inline-block text-xs font-bold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200 px-3 py-1 rounded-full mb-4">
+                  Curated Roleplay Prompts
                 </span>
+                <h1 className="text-2xl sm:text-4xl font-extrabold text-stone-950 tracking-tight mb-3">
+                  Tested System Prompts for Gemini & Claude
+                </h1>
+                <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-2xl mb-6">
+                  High-quality system prompts designed for creative roleplay in <strong>SillyTavern</strong> and <strong>Janitor AI</strong>. They prevent the AI from talking for you, keep characters in-personality, and produce natural, immersive prose.
+                </p>
+
+                {/* Direct Action Buttons */}
+                <div className="flex flex-wrap items-center gap-3">
+                  <button
+                    onClick={() => {
+                      setActiveTab('gemini');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl bg-stone-900 hover:bg-black text-white font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    Gemini Prompts (3)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('claude');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    Claude Prompts (2)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Simple 3-Step Guide */}
+              <div className="space-y-4">
+                <h2 className="text-lg font-bold text-stone-900">
+                  How to Use in 3 Simple Steps
+                </h2>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="bg-white rounded-2xl border border-stone-200 p-5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-stone-100 text-stone-900 font-bold text-xs flex items-center justify-center mb-3">
+                      1
+                    </div>
+                    <h3 className="text-sm font-bold text-stone-950 mb-1">Pick Your Model</h3>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Choose the prompt matching your model (e.g. Gemini 3.6 Flash, 3.7 Flash, or Claude Sonnet).
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-2xl border border-stone-200 p-5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-stone-100 text-stone-900 font-bold text-xs flex items-center justify-center mb-3">
+                      2
+                    </div>
+                    <h3 className="text-sm font-bold text-stone-950 mb-1">Click Copy</h3>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Hit the <strong>Copy Prompt</strong> button on the prompt card to copy the entire system prompt.
+                    </p>
+                  </div>
+
+                  <div className="bg-white rounded-2xl border border-stone-200 p-5 shadow-2xs">
+                    <div className="w-7 h-7 rounded-lg bg-stone-100 text-stone-900 font-bold text-xs flex items-center justify-center mb-3">
+                      3
+                    </div>
+                    <h3 className="text-sm font-bold text-stone-950 mb-1">Paste in Frontend</h3>
+                    <p className="text-xs text-stone-600 leading-relaxed">
+                      Paste it into your <strong>Main Prompt</strong> or <strong>System Prompt</strong> in SillyTavern or Janitor AI.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* What Makes These Prompts Better */}
+              <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-2xs space-y-4">
+                <h2 className="text-base font-bold text-stone-900">
+                  Key Rules Enforced by These Prompts:
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs text-stone-700">
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-stone-800 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-stone-950 block">Zero Puppeting</strong>
+                      The AI will never speak, act, or make decisions for you.
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-stone-800 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-stone-950 block">Consistent Personality</strong>
+                      Characters stay in-character and do not soften or forgive unearned.
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <CheckCircle2 className="w-4 h-4 text-stone-800 shrink-0 mt-0.5" />
+                    <div>
+                      <strong className="text-stone-950 block">No Preachiness</strong>
+                      No moralizing lectures, fake apologies, or broken immersion.
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
+          )}
 
-            {activePrompts.length > 0 ? (
-              <div>
-                {activePrompts.map((prompt, idx) => (
-                  <PromptCard
-                    key={prompt.id}
-                    prompt={prompt}
-                    index={idx}
-                    charName={charName}
-                    userName={userName}
+          {/* TAB 2 & 3: GEMINI & CLAUDE */}
+          {(activeTab === 'gemini' || activeTab === 'claude') && (
+            <div>
+              {/* Header & Search */}
+              <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                  <h1 className="text-2xl font-extrabold text-stone-900 capitalize">
+                    {activeTab} Roleplay Prompts
+                  </h1>
+                  <p className="text-xs text-stone-500 mt-0.5">
+                    {currentPrompts.length} prompt architectures available
+                  </p>
+                </div>
+
+                <div className="relative w-full sm:w-64">
+                  <Search className="w-4 h-4 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search prompts..."
+                    className="w-full text-xs font-medium pl-9 pr-4 py-2 rounded-xl border border-stone-200 bg-white text-stone-900 placeholder:text-stone-400 focus:border-stone-900 focus:outline-none transition-all shadow-2xs"
                   />
-                ))}
+                </div>
               </div>
-            ) : (
-              <div className="text-center py-16 surface-card rounded-xl border border-stone-200">
-                <p className="text-stone-500 text-xs font-mono">
-                  No directives matched query "{searchQuery}".
-                </p>
-              </div>
-            )}
+
+              {/* Prompt List */}
+              {currentPrompts.length > 0 ? (
+                <div className="space-y-6">
+                  {currentPrompts.map((prompt, idx) => (
+                    <PromptCard key={prompt.id} prompt={prompt} index={idx} />
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-16 bg-white rounded-2xl border border-stone-200">
+                  <p className="text-stone-500 text-sm font-medium">
+                    No prompts match "{searchQuery}".
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* TAB 4: DEEPSEEK */}
+          {activeTab === 'deepseek' && (
+            <ComingSoon
+              suiteName="DeepSeek"
+              description="System prompts tailored for DeepSeek V3 and DeepSeek R1 are currently being tested."
+              plannedPrompts={[
+                {
+                  name: 'DeepSeek V3 Creative Sandbox',
+                  desc: 'Fast, uninhibited storytelling with dynamic character state tracking.'
+                },
+                {
+                  name: 'DeepSeek R1 Guided Reasoning',
+                  desc: 'Uses internal reasoning to plan character actions before generating prose.'
+                }
+              ]}
+            />
+          )}
+
+          {/* TAB 5: MIMO */}
+          {activeTab === 'mimo' && (
+            <ComingSoon
+              suiteName="Mimo / MiniMax"
+              description="Prompts optimized for long context windows and distinct multi-character voices are in development."
+              plannedPrompts={[
+                {
+                  name: 'Mimo Long-Context Anchor',
+                  desc: 'Prevents repetitive lines and memory loss in 100k+ token roleplays.'
+                },
+                {
+                  name: 'MiniMax Dialogue Engine',
+                  desc: 'Natural conversational cadence across multiple characters.'
+                }
+              ]}
+            />
+          )}
+        </main>
+
+        {/* Clean Minimal Footer */}
+        <footer className="border-t border-stone-200 bg-white py-6 mt-16 text-center text-xs text-stone-500">
+          <div className="max-w-4xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+            <span>Prompt Knight · Curated by Kars</span>
+            <span>Free to use in SillyTavern & Janitor AI</span>
           </div>
-        )}
-
-        {/* TAB 04: DEEPSEEK */}
-        {activeTab === 'deepseek' && (
-          <ComingSoon
-            suiteName="DeepSeek"
-            targetModel="DeepSeek V3 & DeepSeek R1"
-            overview="Directives currently undergoing reasoning trace benchmarking, isolating chain-of-thought analysis from creative prose delivery."
-            plannedDirectives={[
-              {
-                title: 'DeepSeek V3 Pure Creative Matrix',
-                detail: 'High-speed, uninhibited roleplay engine with somatic prose and dynamic memory indexing.'
-              },
-              {
-                title: 'DeepSeek R1 Guided <think> Harness',
-                detail: 'Channels internal reasoning steps into epistemic firewalls and physical combat calculus before emitting narration.'
-              }
-            ]}
-          />
-        )}
-
-        {/* TAB 05: MIMO */}
-        {activeTab === 'mimo' && (
-          <ComingSoon
-            suiteName="Mimo / MiniMax"
-            targetModel="Mimo & MiniMax Series"
-            overview="Calibrating prompt systems for 100k+ token context windows to prevent repetition loops, voice flattening, and relationship reset degradation."
-            plannedDirectives={[
-              {
-                title: 'Mimo Long-Session Context Anchor',
-                detail: 'Hard structural anchors maintaining character flaws and grudges across massive chat histories.'
-              },
-              {
-                title: 'MiniMax Vocal Fingerprint Matrix',
-                detail: 'Linguistic cadences and dialect markers across multi-NPC environments.'
-              }
-            ]}
-          />
-        )}
-      </main>
-
-      {/* Minimalist Editorial Footer */}
-      <footer className="border-t border-stone-200/80 bg-white py-6 mt-16 text-xs text-stone-500 font-mono">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>PROMPT KNIGHT // MAINTAINED BY KARS</span>
-          <span>ZERO PREACHINESS · ANTI-PUPPETING ENFORCED</span>
-        </div>
-      </footer>
+        </footer>
+      </div>
     </div>
   );
 }
