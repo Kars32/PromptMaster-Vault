@@ -81,7 +81,7 @@ export default function App() {
           {/* Right Header Links */}
           <div className="flex items-center gap-3 text-xs">
             <a
-              href="https://github.com/Kars32/PromptMaster-Vault"
+              href="https://github.com/Kars32/Prompt-Knight"
               target="_blank"
               rel="noreferrer"
               className="px-3 py-1.5 rounded-lg font-medium text-stone-600 hover:text-stone-950 hover:bg-stone-100 transition-colors flex items-center gap-1.5"

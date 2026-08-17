@@ -122,7 +122,7 @@ export default function Sidebar({
         <div className="p-4 border-t border-stone-100 text-xs text-stone-600 shrink-0">
           <p className="font-medium text-[11px]">Free & Open Source</p>
           <a
-            href="https://github.com/Kars32/PromptMaster-Vault"
+            href="https://github.com/Kars32/Prompt-Knight"
             target="_blank"
             rel="noreferrer"
             className="text-[11px] text-stone-700 hover:text-black font-semibold underline underline-offset-2 mt-0.5 inline-block"
