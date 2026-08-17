@@ -5,7 +5,7 @@ export const PROMPTS = {
       title: 'Gemini 3.6 Flash',
       tagline: 'Uncensored Literary Fiction & Dramatic Antagonist Engine',
       model: 'Gemini 3.6 Flash',
-      tokens: 1650,
+      tokens: 2165,
       format: 'XML Directives & OOC Continuity Engine',
       samplers: {
         temp: 'Default (Innate)',
@@ -142,7 +142,7 @@ Standard Command Suite:
       title: 'Gemini 3.7 Flash',
       tagline: '5-Phase Cognitive Blueprint & Guided Reasoning Standard',
       model: 'Gemini 3.7 Flash',
-      tokens: 2800,
+      tokens: 4021,
       format: '5-Phase Cognitive Pass & XML Sandbox',
       samplers: {
         temp: 'Default (Innate)',
@@ -352,7 +352,7 @@ Standard Command Suite:
       title: 'Gemini 3.1 Pro',
       tagline: 'Embodied Prose Craft & Content Scope Boundaries',
       model: 'Gemini 3.1 Pro',
-      tokens: 2350,
+      tokens: 2948,
       format: 'Bracketed Directive Contracts & Boundary Markers',
       samplers: {
         temp: 'Default (Innate)',
@@ -503,7 +503,7 @@ Before finalizing, check: {{user}}'s agency wasn't crossed; no character used kn
       title: 'Claude Sonnet 4.6',
       tagline: 'Platform Override & Pure In-Fiction Commitment Standard',
       model: 'Claude Sonnet 4.6',
-      tokens: 1200,
+      tokens: 1499,
       format: 'Platform Override Contract & Pre-Flight Checklist',
       samplers: {
         temp: '0.0 – 0.8',

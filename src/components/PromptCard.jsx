@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash } from 'lucide-react';
+import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal } from 'lucide-react';
 
 export default function PromptCard({ prompt, index }) {
   const [copied, setCopied] = useState(false);
@@ -34,20 +34,20 @@ export default function PromptCard({ prompt, index }) {
   return (
     <div className="bg-white rounded-2xl border border-stone-200 shadow-xs mb-8 overflow-hidden transition-all duration-200">
       {/* Header Info */}
-      <div className="p-6 md:p-8 border-b border-stone-100 bg-stone-50/30">
+      <div className="p-6 md:p-8 border-b border-stone-100 bg-stone-50/40">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <div className="flex flex-wrap items-center gap-2 mb-2">
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-stone-100 text-stone-800">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-stone-100 text-stone-800 font-sans">
                 <Cpu className="w-3.5 h-3.5 text-stone-500" />
                 {prompt.model}
               </span>
-              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-semibold bg-stone-100 text-stone-600 font-mono">
-                <Hash className="w-3 h-3 text-stone-500" />
-                ~{prompt.tokens.toLocaleString()} tokens
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-bold bg-stone-900 text-stone-100 font-mono">
+                <Hash className="w-3 h-3 text-stone-400" />
+                {prompt.tokens.toLocaleString()} tokens
               </span>
             </div>
-            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-stone-900">
+            <h2 className="text-xl md:text-2xl font-bold tracking-tight text-stone-900 font-sans">
               {prompt.title}
             </h2>
             <p className="text-sm text-stone-500 mt-1 font-medium">
@@ -90,74 +90,116 @@ export default function PromptCard({ prompt, index }) {
 
         {/* Sampler Quick Settings */}
         {prompt.samplers && (
-          <div className="mt-5 p-3.5 rounded-xl bg-stone-100/70 border border-stone-200/60">
-            <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider block mb-2 font-mono">
-              Empirical Sampler Calibration
-            </span>
+          <div className="mt-5 p-3.5 rounded-xl bg-stone-100/80 border border-stone-200/70">
+            <div className="flex items-center justify-between gap-2 mb-2">
+              <span className="text-[11px] font-bold text-stone-700 uppercase tracking-wider block font-mono">
+                Sampler Configuration
+              </span>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 text-xs">
-              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
-                <span className="text-[10px] text-stone-600 block font-medium">Temperature</span>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60 shadow-2xs">
+                <span className="text-[10px] text-stone-500 block font-medium">Temperature</span>
                 <span className="font-mono font-bold text-stone-900">{prompt.samplers.temp}</span>
               </div>
-              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
-                <span className="text-[10px] text-stone-600 block font-medium">Top-P</span>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60 shadow-2xs">
+                <span className="text-[10px] text-stone-500 block font-medium">Top-P</span>
                 <span className="font-mono font-bold text-stone-900">{prompt.samplers.topP}</span>
               </div>
-              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
-                <span className="text-[10px] text-stone-600 block font-medium">Top-K</span>
-                <span className="font-mono font-bold text-stone-900">{prompt.samplers.topK || 'Off'}</span>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60 shadow-2xs">
+                <span className="text-[10px] text-stone-500 block font-medium">Top-K</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.topK}</span>
               </div>
-              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
-                <span className="text-[10px] text-stone-600 block font-medium">Min-P</span>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60 shadow-2xs">
+                <span className="text-[10px] text-stone-500 block font-medium">Min-P</span>
                 <span className="font-mono font-bold text-stone-900">{prompt.samplers.minP}</span>
               </div>
-              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
-                <span className="text-[10px] text-stone-600 block font-medium">Rep. Penalty</span>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60 shadow-2xs">
+                <span className="text-[10px] text-stone-500 block font-medium">Rep. Penalty</span>
                 <span className="font-mono font-bold text-stone-900">{prompt.samplers.repPenalty}</span>
               </div>
-              <div className="bg-white p-2 rounded-lg border border-stone-200/60">
-                <span className="text-[10px] text-stone-600 block font-medium">Freq. Penalty</span>
-                <span className="font-mono font-bold text-stone-900">{prompt.samplers.freqPenalty || '0.00'}</span>
+              <div className="bg-white p-2 rounded-lg border border-stone-200/60 shadow-2xs">
+                <span className="text-[10px] text-stone-500 block font-medium">Freq. Penalty</span>
+                <span className="font-mono font-bold text-stone-900">{prompt.samplers.freqPenalty}</span>
               </div>
             </div>
 
             {prompt.communityTip && (
-              <p className="mt-2.5 text-[11px] text-stone-600 leading-relaxed bg-white/70 p-2 rounded-lg border border-stone-200/50">
-                <strong className="text-stone-900 font-semibold">Community Note:</strong> {prompt.communityTip}
+              <p className="mt-2.5 text-[11px] text-stone-600 leading-relaxed bg-white/90 p-2 rounded-lg border border-stone-200/60">
+                <strong className="text-stone-900 font-semibold">Note:</strong> {prompt.communityTip}
               </p>
             )}
           </div>
         )}
       </div>
 
-      {/* Code Block Container */}
-      <div className="relative bg-[#F8F9FA]">
-        <pre
-          className={`p-5 md:p-6 text-xs md:text-sm font-mono text-stone-800 overflow-x-auto ${
-            isExpanded ? 'max-h-none' : 'max-h-60 overflow-hidden'
+      {/* Codeblock Container */}
+      <div className="bg-[#18181B] text-stone-100 border-t border-stone-800">
+        {/* Codeblock Header Bar */}
+        <div className="flex items-center justify-between px-4 py-2.5 bg-[#121214] border-b border-stone-800/80 text-xs font-mono text-stone-400">
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-stone-700 inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-stone-700 inline-block" />
+              <span className="w-2.5 h-2.5 rounded-full bg-stone-700 inline-block" />
+            </div>
+            <span className="text-stone-300 font-medium ml-2 flex items-center gap-1 text-[11px]">
+              <Terminal className="w-3 h-3 text-stone-500" />
+              {prompt.id}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <span className="text-[11px] text-stone-500 hidden sm:inline">
+              {prompt.format}
+            </span>
+            <button
+              onClick={handleCopy}
+              className="text-[11px] text-stone-300 hover:text-white flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              {copied ? (
+                <>
+                  <Check className="w-3 h-3 text-emerald-400" />
+                  Copied
+                </>
+              ) : (
+                <>
+                  <Copy className="w-3 h-3 text-stone-400" />
+                  Copy
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Codeblock Viewport */}
+        <div
+          className={`font-mono text-xs text-stone-200 p-4 sm:p-6 overflow-x-auto ${
+            isExpanded ? 'max-h-none' : 'max-h-64 overflow-hidden'
           }`}
         >
-          <code>{prompt.content}</code>
-        </pre>
+          <pre className="leading-relaxed whitespace-pre font-mono">
+            <code>{prompt.content}</code>
+          </pre>
+        </div>
 
-        {/* Expand / Collapse Bar */}
-        <div className="flex items-center justify-between px-6 py-3 border-t border-stone-200/80 bg-white">
+        {/* Expand / Collapse Tray */}
+        <div className="flex items-center justify-between px-6 py-2.5 border-t border-stone-800/80 bg-[#141416]">
           <span className="text-xs text-stone-500 font-mono">
-            {lines.length} lines
+            {lines.length} lines · {prompt.tokens.toLocaleString()} tokens
           </span>
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="text-xs font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1.5 cursor-pointer transition-colors"
+            className="text-xs font-semibold text-stone-300 hover:text-white flex items-center gap-1.5 cursor-pointer transition-colors"
           >
             {isExpanded ? (
               <>
-                Collapse Prompt
-                <ChevronUp className="w-3.5 h-3.5 text-stone-500" />
+                Collapse Codeblock
+                <ChevronUp className="w-3.5 h-3.5 text-stone-400" />
               </>
             ) : (
               <>
-                View Full Prompt ({lines.length} lines)
-                <ChevronDown className="w-3.5 h-3.5 text-stone-500" />
+                Expand Full Codeblock ({lines.length} lines)
+                <ChevronDown className="w-3.5 h-3.5 text-stone-400" />
               </>
             )}
           </button>
