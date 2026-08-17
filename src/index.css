@@ -3,6 +3,8 @@
 @layer base {
   body {
     font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    color: #18181B;
+    background-color: #FAFAF8;
   }
 
   code, pre, kbd {
@@ -10,10 +12,26 @@
   }
 }
 
-/* Custom Scrollbars */
+.font-editorial {
+  font-family: 'Newsreader', Georgia, serif;
+}
+
+/* Subtle elevation tokens */
+.surface-card {
+  background-color: #FFFFFF;
+  border: 1px solid rgba(24, 24, 27, 0.08);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02), 0 6px 16px -2px rgba(0, 0, 0, 0.02);
+}
+
+.surface-code {
+  background-color: #F8F8F7;
+  border: 1px solid rgba(24, 24, 27, 0.08);
+}
+
+/* Minimalist scrollbars */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
@@ -21,10 +39,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #E7E5E4;
+  background: #E4E4E7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #D6D3D1;
+  background: #D4D4D8;
 }
