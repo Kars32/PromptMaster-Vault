@@ -13,7 +13,6 @@ export default function App() {
 
   // Filter prompts based on active tab and search query
   const currentPrompts = useMemo(() => {
-    if (activeTab !== 'gemini' && activeTab !== 'claude') return [];
     const list = PROMPTS[activeTab] || [];
     if (!searchQuery.trim()) return list;
     const q = searchQuery.toLowerCase();
