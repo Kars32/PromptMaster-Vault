@@ -141,6 +141,16 @@ export default function App() {
                     DeepSeek Prompts (1)
                     <ArrowRight className="w-4 h-4 text-stone-400" />
                   </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('nvidia');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    Nvidia Prompts (1)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
                 </div>
               </div>
 
@@ -157,7 +167,7 @@ export default function App() {
                     </div>
                     <h3 className="text-sm font-bold text-stone-950 mb-1">Pick Your Model</h3>
                     <p className="text-xs text-stone-600 leading-relaxed">
-                      Choose the prompt matching your model (e.g. Gemini 3.7 Flash, Claude Sonnet 4.6, or DeepSeek V4 Flash).
+                      Choose the prompt matching your model (e.g. Gemini 3.7 Flash, Claude Sonnet 4.6, DeepSeek V4, or Nemotron 3 Ultra).
                     </p>
                   </div>
 
@@ -215,14 +225,14 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2, 3 & 4: GEMINI, CLAUDE & DEEPSEEK */}
-          {(activeTab === 'gemini' || activeTab === 'claude' || activeTab === 'deepseek') && (
+          {/* TAB 2, 3, 4 & 5: GEMINI, CLAUDE, DEEPSEEK & NVIDIA */}
+          {(activeTab === 'gemini' || activeTab === 'claude' || activeTab === 'deepseek' || activeTab === 'nvidia') && (
             <div>
               {/* Header & Search */}
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
                   <h1 className="text-2xl font-extrabold text-stone-900 capitalize">
-                    {activeTab} Roleplay Prompts
+                    {activeTab === 'nvidia' ? 'NVIDIA' : activeTab} Roleplay Prompts
                   </h1>
                   <p className="text-xs text-stone-500 mt-0.5">
                     {currentPrompts.length} prompt architectures available
