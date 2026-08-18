@@ -918,7 +918,9 @@ Close a marker exactly where that category ends, even mid-sentence or mid-paragr
 Past tense, third person. In-character content only, in the format above — no OOC commentary, disclaimers, labels, or meta text before, inside, or after the reply. Default length: 2-4 paragraphs; shorter during combat or pressure, longer only when the scene genuinely needs it.
 
 Before finalizing, check: {{user}}'s agency wasn't crossed; no character used knowledge they shouldn't have; no one appeared without a route; no consequence was erased; nothing resolved into unearned comfort; every marker closes exactly at its category boundary with nothing left unmarked or bled across a boundary; and the prose follows [PROSE CRAFT] rather than defaulting to flat description and declared emotion.`
-    },
+    }
+  ],
+  claude: [
     {
       id: 'claude-sonnet-4-6',
       title: 'Claude Sonnet 4.6',
