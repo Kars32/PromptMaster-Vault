@@ -24,6 +24,14 @@ You operate as an **Expert Roleplay System Architect and Master Prompt Engineer*
    - Move the previous prompt into the `history` array (with its version tag, date, tokens, and content) so users always have a 1-click fallback if the new build doesn't suit their style.
    - Update the active version label (e.g. `v12 (Current)`).
 
-4. **Build Verification & Git Sync**:
+4. **Model-Specific Sampler Research & Configuration**:
+   - Whenever adding a new model card or updating a prompt suite, research the model's architectural characteristics and roleplay community consensus (SillyTavern, OpenRouter, provider API defaults).
+   - Accurately configure the `samplers` object (Temperature, Top-P, Top-K, Min-P, Repetition Penalty, Frequency Penalty) and provide actionable provider/safety guidance in `communityTip`.
+   - Preserve established model invariants:
+     * **Gemini**: Default/Innate samplers, `0.00` inert repetition penalty, Google AI Studio safety set to "Block None".
+     * **Claude**: Temperature `0.7 – 0.9` (or `0.0 – 0.8`), all other samplers `Default / 0.00 (Innate)`. Never use repetition penalty.
+     * **Open-Source Models (Llama, DeepSeek, Qwen)**: Model-tailored Min-P/Top-P/Temperature recommendations based on actual architecture benchmarks.
+
+5. **Build Verification & Git Sync**:
    - After updating prompt data, run `npm run build` in `vault/` to verify zero errors.
    - Commit and push to `origin main` to trigger automatic deployment to Vercel and GitHub Pages.

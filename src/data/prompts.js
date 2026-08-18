@@ -930,14 +930,14 @@ Before finalizing, check: {{user}}'s agency wasn't crossed; no character used kn
       tokens: 5047,
       format: 'Semantic XML Directives & Guided Cognitive Architecture',
       samplers: {
-        temp: '0.0 – 0.8',
-        topP: 'Default (Innate)',
+        temp: '0.7 – 0.9 (or 0.0 – 0.8)',
+        topP: '1.00 / Default (Innate)',
         topK: '0 / Off (Innate)',
-        minP: '0 / Off (Innate)',
-        repPenalty: '0.00 (Innate)',
-        freqPenalty: '0.00 (Innate)'
+        minP: '0.00 / Off (Innate)',
+        repPenalty: '0.00 / Off (Inert)',
+        freqPenalty: '0.00 / Off (Inert)'
       },
-      communityTip: 'Keep all samplers at default/0 and set Temperature between 0.0 – 0.8. Anti-repetition is handled natively by the prompt.',
+      communityTip: 'Keep all samplers at provider default/0. Set Temperature to 0.7 – 0.9 for creative fiction (or 0.0 – 0.8 for strict instruction adherence). Never use repetition penalty on Claude as it degrades reasoning.',
       tags: ['XML Architecture', 'Anti-Purple Prose', 'Somatic Mechanics', 'Epistemic Firewall'],
       history: [
         {
