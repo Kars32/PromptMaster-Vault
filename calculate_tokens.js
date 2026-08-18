@@ -2,9 +2,9 @@ import { encode as encodeCl100k } from 'gpt-tokenizer/model/gpt-4';
 import { encode as encodeO200k } from 'gpt-tokenizer/model/gpt-4o';
 import { PROMPTS } from './src/data/prompts.js';
 
-console.log('='.repeat(75));
-console.log('                 ⚔️ PROMPT KNIGHT — TOKEN AUDIT REPORT');
-console.log('='.repeat(75));
+console.log('='.repeat(80));
+console.log('                 ⚔️ PROMPT KNIGHT — TOKEN AUDIT & HISTORY REPORT');
+console.log('='.repeat(80));
 
 const results = [];
 
@@ -20,31 +20,49 @@ for (const [suite, promptList] of Object.entries(PROMPTS)) {
     results.push({
       suite: suite.toUpperCase(),
       id: p.id,
-      title: p.title,
+      title: `${p.title} (${p.version || 'Current'})`,
       cl100kTokens,
       o200kTokens,
       charCount,
       wordCount,
       lineCount
     });
+
+    if (p.history && p.history.length > 0) {
+      for (const h of p.history) {
+        const hText = h.content;
+        const hCl100k = encodeCl100k(hText).length;
+        const hO200k = encodeO200k(hText).length;
+        results.push({
+          suite: suite.toUpperCase(),
+          id: p.id,
+          title: ` └─ [History] ${h.label || h.version}`,
+          cl100kTokens: hCl100k,
+          o200kTokens: hO200k,
+          charCount: hText.length,
+          wordCount: hText.trim().split(/\s+/).length,
+          lineCount: hText.split('\n').length
+        });
+      }
+    }
   }
 }
 
 console.log(
   'SUITE'.padEnd(8) + ' | ' +
-  'MODEL / PROMPT'.padEnd(20) + ' | ' +
+  'MODEL / VERSION'.padEnd(30) + ' | ' +
   'CL100K'.padStart(7) + ' | ' +
   'O200K'.padStart(7) + ' | ' +
   'WORDS'.padStart(6) + ' | ' +
   'CHARS'.padStart(7) + ' | ' +
   'LINES'.padStart(5)
 );
-console.log('-'.repeat(75));
+console.log('-'.repeat(80));
 
 for (const r of results) {
   console.log(
     r.suite.padEnd(8) + ' | ' +
-    r.title.padEnd(20) + ' | ' +
+    r.title.padEnd(30) + ' | ' +
     String(r.cl100kTokens).padStart(7) + ' | ' +
     String(r.o200kTokens).padStart(7) + ' | ' +
     String(r.wordCount).padStart(6) + ' | ' +
@@ -53,4 +71,4 @@ for (const r of results) {
   );
 }
 
-console.log('='.repeat(75));
+console.log('='.repeat(80));

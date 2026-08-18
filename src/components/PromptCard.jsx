@@ -1,13 +1,49 @@
-import React, { useState } from 'react';
-import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal, History, RotateCcw } from 'lucide-react';
 
 export default function PromptCard({ prompt, index }) {
   const [copied, setCopied] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+  const [selectedVersionKey, setSelectedVersionKey] = useState('current');
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  const hasHistory = prompt.history && prompt.history.length > 0;
+
+  // Determine active version data
+  const activeData = useMemo(() => {
+    if (selectedVersionKey === 'current' || !hasHistory) {
+      return {
+        version: prompt.version || 'v1.0 (Current)',
+        isCurrent: true,
+        tokens: prompt.tokens,
+        content: prompt.content,
+        tagline: prompt.tagline
+      };
+    }
+    const historicalItem = prompt.history.find((h) => h.version === selectedVersionKey);
+    if (historicalItem) {
+      return {
+        version: historicalItem.version,
+        label: historicalItem.label || historicalItem.version,
+        isCurrent: false,
+        tokens: historicalItem.tokens,
+        content: historicalItem.content,
+        tagline: historicalItem.tagline || prompt.tagline,
+        date: historicalItem.date
+      };
+    }
+    return {
+      version: prompt.version || 'v1.0 (Current)',
+      isCurrent: true,
+      tokens: prompt.tokens,
+      content: prompt.content,
+      tagline: prompt.tagline
+    };
+  }, [prompt, selectedVersionKey, hasHistory]);
 
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(prompt.content);
+      await navigator.clipboard.writeText(activeData.content);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
@@ -18,18 +54,18 @@ export default function PromptCard({ prompt, index }) {
   const handleDownload = () => {
     const isXml = prompt.format.toLowerCase().includes('xml');
     const ext = isXml ? 'xml' : 'txt';
-    const blob = new Blob([prompt.content], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([activeData.content], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${prompt.id}.${ext}`;
+    link.download = `${prompt.id}_${activeData.version.replace(/[^a-zA-Z0-9_-]/g, '_')}.${ext}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 
-  const lines = prompt.content.split('\n');
+  const lines = activeData.content.split('\n');
 
   return (
     <div className="bg-white rounded-2xl border border-stone-200 shadow-xs mb-8 overflow-hidden transition-all duration-200">
@@ -37,22 +73,136 @@ export default function PromptCard({ prompt, index }) {
       <div className="p-6 md:p-8 border-b border-stone-100 bg-stone-50/40">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
+            {/* Top Badges & Version Selector */}
             <div className="flex flex-wrap items-center gap-2 mb-2">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-bold uppercase tracking-wider bg-stone-100 text-stone-800 font-sans">
                 <Cpu className="w-3.5 h-3.5 text-stone-500" />
                 {prompt.model}
               </span>
+
+              {/* Version History Selector */}
+              <div className="relative">
+                <button
+                  onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+                  className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-semibold font-mono border transition-all cursor-pointer ${
+                    activeData.isCurrent
+                      ? 'bg-stone-100 border-stone-200 text-stone-800 hover:bg-stone-200/70'
+                      : 'bg-amber-50 border-amber-200 text-amber-900 font-bold'
+                  }`}
+                  title="View prompt version history and legacy fallbacks"
+                >
+                  <History className="w-3 h-3 text-stone-500" />
+                  <span>{activeData.version}</span>
+                  {hasHistory && <ChevronDown className="w-3 h-3 text-stone-400" />}
+                </button>
+
+                {/* Dropdown Menu for History */}
+                {isHistoryOpen && (
+                  <div
+                    className="absolute left-0 top-full mt-1.5 w-64 bg-white rounded-xl border border-stone-200 shadow-lg z-20 p-1.5 text-xs font-sans"
+                    onMouseLeave={() => setIsHistoryOpen(false)}
+                  >
+                    <div className="px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wider text-stone-400 font-mono border-b border-stone-100 mb-1">
+                      Version Fallbacks
+                    </div>
+
+                    {/* Current Version Option */}
+                    <button
+                      onClick={() => {
+                        setSelectedVersionKey('current');
+                        setIsHistoryOpen(false);
+                      }}
+                      className={`w-full text-left px-2.5 py-2 rounded-lg transition-colors flex items-center justify-between cursor-pointer ${
+                        selectedVersionKey === 'current'
+                          ? 'bg-stone-900 text-white font-semibold'
+                          : 'hover:bg-stone-100 text-stone-800'
+                      }`}
+                    >
+                      <div>
+                        <div className="font-semibold text-xs flex items-center gap-1.5">
+                          <span>{prompt.version || 'v1.0 (Current)'}</span>
+                          <span className={`text-[9px] px-1 py-0.2 rounded font-mono ${selectedVersionKey === 'current' ? 'bg-stone-800 text-emerald-300' : 'bg-emerald-50 text-emerald-700'}`}>
+                            LATEST
+                          </span>
+                        </div>
+                        <span className={`text-[10px] block ${selectedVersionKey === 'current' ? 'text-stone-300' : 'text-stone-500'}`}>
+                          {prompt.tokens.toLocaleString()} tokens · Active build
+                        </span>
+                      </div>
+                      {selectedVersionKey === 'current' && <Check className="w-3.5 h-3.5 text-white shrink-0" />}
+                    </button>
+
+                    {/* Historical Fallback Versions */}
+                    {hasHistory ? (
+                      prompt.history.map((hist) => {
+                        const isSelected = selectedVersionKey === hist.version;
+                        return (
+                          <button
+                            key={hist.version}
+                            onClick={() => {
+                              setSelectedVersionKey(hist.version);
+                              setIsHistoryOpen(false);
+                            }}
+                            className={`w-full text-left px-2.5 py-2 rounded-lg transition-colors flex items-center justify-between mt-1 cursor-pointer ${
+                              isSelected
+                                ? 'bg-amber-100 text-amber-950 font-semibold'
+                                : 'hover:bg-stone-100 text-stone-700'
+                            }`}
+                          >
+                            <div>
+                              <div className="font-semibold text-xs flex items-center gap-1.5">
+                                <span>{hist.label || hist.version}</span>
+                                <span className="text-[9px] px-1 py-0.2 rounded bg-stone-200 text-stone-600 font-mono">
+                                  FALLBACK
+                                </span>
+                              </div>
+                              <span className="text-[10px] text-stone-500 block">
+                                {hist.tokens ? `${hist.tokens.toLocaleString()} tokens` : ''} {hist.date ? `· ${hist.date}` : ''}
+                              </span>
+                            </div>
+                            {isSelected && <Check className="w-3.5 h-3.5 text-amber-800 shrink-0" />}
+                          </button>
+                        );
+                      })
+                    ) : (
+                      <div className="px-2.5 py-2 text-[11px] text-stone-400 italic">
+                        No older versions logged yet.
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
+              {/* Exact Token Badge */}
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-bold bg-stone-900 text-stone-100 font-mono">
                 <Hash className="w-3 h-3 text-stone-400" />
-                {prompt.tokens.toLocaleString()} tokens
+                {activeData.tokens.toLocaleString()} tokens
               </span>
             </div>
+
             <h2 className="text-xl md:text-2xl font-bold tracking-tight text-stone-900 font-sans">
               {prompt.title}
             </h2>
             <p className="text-sm text-stone-500 mt-1 font-medium">
-              {prompt.tagline}
+              {activeData.tagline}
             </p>
+
+            {/* Fallback Active Banner */}
+            {!activeData.isCurrent && (
+              <div className="mt-3 p-2.5 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 flex items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="font-bold">⚠️ Fallback Version Active:</span>
+                  <span>Viewing {activeData.version}.</span>
+                </div>
+                <button
+                  onClick={() => setSelectedVersionKey('current')}
+                  className="px-2.5 py-1 rounded-lg bg-amber-900 text-white font-semibold text-[11px] hover:bg-amber-950 transition-colors flex items-center gap-1 cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  Switch to Latest
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Action Buttons */}
@@ -140,7 +290,7 @@ export default function PromptCard({ prompt, index }) {
             <div className="flex items-center gap-2">
               <span className="text-stone-900 font-bold flex items-center gap-1.5 text-[11px]">
                 <Terminal className="w-3.5 h-3.5 text-stone-500" />
-                {prompt.id}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
+                {prompt.id}_{activeData.version.replace(/[^a-zA-Z0-9_-]/g, '')}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
               </span>
             </div>
 
@@ -174,14 +324,14 @@ export default function PromptCard({ prompt, index }) {
             }`}
           >
             <pre className="leading-relaxed whitespace-pre font-mono">
-              <code>{prompt.content}</code>
+              <code>{activeData.content}</code>
             </pre>
           </div>
 
           {/* Codeblock Bottom Bar */}
           <div className="flex items-center justify-between px-4 py-2 border-t border-stone-200/80 bg-[#EEEEEC]">
             <span className="text-xs text-stone-500 font-mono">
-              {lines.length} lines · {prompt.tokens.toLocaleString()} tokens
+              {lines.length} lines · {activeData.tokens.toLocaleString()} tokens ({activeData.version})
             </span>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
