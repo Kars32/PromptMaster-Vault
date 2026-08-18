@@ -131,6 +131,16 @@ export default function App() {
                     Claude Prompts (1)
                     <ArrowRight className="w-4 h-4 text-stone-400" />
                   </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('deepseek');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    DeepSeek Prompts (1)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
                 </div>
               </div>
 
@@ -147,7 +157,7 @@ export default function App() {
                     </div>
                     <h3 className="text-sm font-bold text-stone-950 mb-1">Pick Your Model</h3>
                     <p className="text-xs text-stone-600 leading-relaxed">
-                      Choose the prompt matching your model (e.g. Gemini 3.6 Flash, 3.7 Flash, or Claude Sonnet).
+                      Choose the prompt matching your model (e.g. Gemini 3.7 Flash, Claude Sonnet 4.6, or DeepSeek V4 Flash).
                     </p>
                   </div>
 
@@ -205,8 +215,8 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2 & 3: GEMINI & CLAUDE */}
-          {(activeTab === 'gemini' || activeTab === 'claude') && (
+          {/* TAB 2, 3 & 4: GEMINI, CLAUDE & DEEPSEEK */}
+          {(activeTab === 'gemini' || activeTab === 'claude' || activeTab === 'deepseek') && (
             <div>
               {/* Header & Search */}
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -246,24 +256,6 @@ export default function App() {
                 </div>
               )}
             </div>
-          )}
-
-          {/* TAB 4: DEEPSEEK */}
-          {activeTab === 'deepseek' && (
-            <ComingSoon
-              suiteName="DeepSeek"
-              description="System prompts tailored for DeepSeek V3 and DeepSeek R1 are currently being tested."
-              plannedPrompts={[
-                {
-                  name: 'DeepSeek V3 Creative Sandbox',
-                  desc: 'Fast, uninhibited storytelling with dynamic character state tracking.'
-                },
-                {
-                  name: 'DeepSeek R1 Guided Reasoning',
-                  desc: 'Uses internal reasoning to plan character actions before generating prose.'
-                }
-              ]}
-            />
           )}
 
           {/* TAB 5: MIMO */}
