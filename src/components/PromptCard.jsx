@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal, History, RotateCcw, Boxes, Puzzle } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal, History, RotateCcw, Boxes, Puzzle, X } from 'lucide-react';
 
 export default function PromptCard({ prompt, index }) {
   const [copied, setCopied] = useState(false);
@@ -7,8 +7,19 @@ export default function PromptCard({ prompt, index }) {
   const [selectedVersionKey, setSelectedVersionKey] = useState('current');
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isOocOpen, setIsOocOpen] = useState(false);
-  const [isMobileModulesOpen, setIsMobileModulesOpen] = useState(false);
+  const [isModulesOpen, setIsModulesOpen] = useState(false);
   const [copiedCmd, setCopiedCmd] = useState(null);
+
+  // Close modules drawer on Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isModulesOpen) {
+        setIsModulesOpen(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isModulesOpen]);
 
   const hasHistory = prompt.history && prompt.history.length > 0;
 
@@ -221,6 +232,21 @@ export default function PromptCard({ prompt, index }) {
           {/* Action Buttons */}
           <div className="flex items-center gap-2">
             <button
+              onClick={() => setIsModulesOpen(!isModulesOpen)}
+              className={`px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 ${
+                isModulesOpen
+                  ? 'bg-stone-900 text-white border-stone-900'
+                  : 'bg-white border-stone-200 hover:bg-stone-50 text-stone-700'
+              }`}
+              title="View and toggle optional system modules"
+            >
+              <Boxes className={`w-3.5 h-3.5 ${isModulesOpen ? 'text-amber-300' : 'text-stone-500'}`} />
+              <span>Modules</span>
+              <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${isModulesOpen ? 'bg-stone-800 text-stone-300' : 'bg-stone-100 text-stone-700'}`}>
+                0
+              </span>
+            </button>
+            <button
               onClick={handleDownload}
               className="px-3.5 py-2 rounded-xl text-xs font-semibold border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
               title="Download prompt file"
@@ -389,164 +415,190 @@ export default function PromptCard({ prompt, index }) {
         )}
       </div>
 
-      {/* Prompt Body & Optional Modules Box */}
+      {/* Full-Width Codeblock */}
       <div className="p-6 md:p-8 pt-0">
-        {/* Mobile Modules Toggle Button */}
-        <div className="lg:hidden mb-3.5">
-          <button
-            onClick={() => setIsMobileModulesOpen(!isMobileModulesOpen)}
-            className={`w-full py-2.5 px-4 rounded-xl border text-xs font-semibold flex items-center justify-between transition-all cursor-pointer shadow-2xs ${
-              isMobileModulesOpen
-                ? 'bg-stone-900 text-white border-stone-900'
-                : 'bg-white border-stone-200 text-stone-800 hover:bg-stone-50'
-            }`}
-          >
+        <div className="rounded-xl border border-stone-200/90 bg-[#F7F7F5] overflow-hidden shadow-2xs">
+          {/* Codeblock Top Bar */}
+          <div className="flex items-center justify-between px-4 py-2.5 bg-[#EEEEEC] border-b border-stone-200 text-xs font-mono text-stone-600">
             <div className="flex items-center gap-2">
-              <Boxes className={`w-4 h-4 ${isMobileModulesOpen ? 'text-amber-300' : 'text-stone-500'}`} />
-              <span className="font-bold font-sans">Optional Modules</span>
-              <span className={`px-1.5 py-0.5 rounded text-[10px] font-mono font-semibold ${isMobileModulesOpen ? 'bg-stone-800 text-stone-300' : 'bg-stone-100 text-stone-600'}`}>
-                Add-ons
+              <span className="text-stone-900 font-bold flex items-center gap-1.5 text-[11px]">
+                <Terminal className="w-3.5 h-3.5 text-stone-500" />
+                {prompt.id}_{activeData.version.replace(/[^a-zA-Z0-9_-]/g, '')}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
               </span>
             </div>
-            <div className="flex items-center gap-1.5 text-[11px] font-mono">
-              <span>{isMobileModulesOpen ? 'Hide Modules' : 'View Modules'}</span>
-              {isMobileModulesOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-            </div>
-          </button>
-        </div>
 
-        <div className="flex flex-col lg:flex-row gap-5 items-stretch">
-          {/* Main Master Prompt Codeblock (Left Side) */}
-          <div className="flex-1 min-w-0 flex flex-col rounded-xl border border-stone-200/90 bg-[#F7F7F5] overflow-hidden shadow-2xs">
-            {/* Codeblock Top Bar */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#EEEEEC] border-b border-stone-200 text-xs font-mono text-stone-600">
-              <div className="flex items-center gap-2">
-                <span className="text-stone-900 font-bold flex items-center gap-1.5 text-[11px]">
-                  <Terminal className="w-3.5 h-3.5 text-stone-500" />
-                  {prompt.id}_{activeData.version.replace(/[^a-zA-Z0-9_-]/g, '')}.{prompt.format.toLowerCase().includes('xml') ? 'xml' : 'txt'}
-                </span>
-              </div>
-
-              <div className="flex items-center gap-3">
-                <span className="text-[11px] text-stone-500 font-medium hidden sm:inline">
-                  {prompt.format}
-                </span>
-                <button
-                  onClick={handleCopy}
-                  className="text-[11px] font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors px-2 py-0.5 rounded hover:bg-stone-200/70"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-3 h-3 text-emerald-600" />
-                      <span className="text-emerald-700">Copied</span>
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-3 h-3 text-stone-500" />
-                      Copy
-                    </>
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Codeblock Viewport */}
-            <div
-              className={`font-mono text-xs text-stone-800 p-4 sm:p-5 overflow-x-auto ${
-                isExpanded ? 'max-h-none' : 'max-h-72 overflow-hidden'
-              }`}
-            >
-              <pre className="leading-relaxed whitespace-pre font-mono">
-                <code>{activeData.content}</code>
-              </pre>
-            </div>
-
-            {/* Codeblock Bottom Bar */}
-            <div className="mt-auto flex items-center justify-between px-4 py-2 border-t border-stone-200/80 bg-[#EEEEEC]">
-              <span className="text-xs text-stone-500 font-mono">
-                {lines.length} lines · {activeData.tokens.toLocaleString()} tokens ({activeData.version})
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-[11px] text-stone-500 font-medium hidden sm:inline">
+                {prompt.format}
               </span>
               <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className="text-xs font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors"
+                onClick={() => setIsModulesOpen(true)}
+                className="text-[11px] font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors px-2 py-0.5 rounded hover:bg-stone-200/70"
+                title="Open Optional Modules Drawer"
               >
-                {isExpanded ? (
+                <Boxes className="w-3.5 h-3.5 text-stone-500" />
+                <span>Modules</span>
+              </button>
+              <button
+                onClick={handleCopy}
+                className="text-[11px] font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors px-2 py-0.5 rounded hover:bg-stone-200/70"
+              >
+                {copied ? (
                   <>
-                    Collapse
-                    <ChevronUp className="w-3.5 h-3.5 text-stone-500" />
+                    <Check className="w-3 h-3 text-emerald-600" />
+                    <span className="text-emerald-700">Copied</span>
                   </>
                 ) : (
                   <>
-                    View Full ({lines.length} lines)
-                    <ChevronDown className="w-3.5 h-3.5 text-stone-500" />
+                    <Copy className="w-3 h-3 text-stone-500" />
+                    Copy
                   </>
                 )}
               </button>
             </div>
           </div>
 
-          {/* Optional Modules Box (Right Side on Desktop, Toggled on Mobile) */}
+          {/* Codeblock Viewport (Full Width 100%) */}
           <div
-            className={`w-full lg:w-80 xl:w-96 shrink-0 flex flex-col rounded-xl border border-stone-200/90 bg-[#F7F7F5] overflow-hidden shadow-2xs transition-all ${
-              isMobileModulesOpen ? 'flex' : 'hidden lg:flex'
+            className={`font-mono text-xs text-stone-800 p-4 sm:p-5 overflow-x-auto ${
+              isExpanded ? 'max-h-none' : 'max-h-72 overflow-hidden'
             }`}
           >
-            {/* Modules Top Bar */}
-            <div className="flex items-center justify-between px-4 py-2.5 bg-[#EEEEEC] border-b border-stone-200 text-xs font-mono text-stone-600">
-              <div className="flex items-center gap-2">
-                <Boxes className="w-3.5 h-3.5 text-stone-600" />
-                <span className="text-stone-900 font-bold text-[11px]">Optional Modules</span>
-              </div>
-              <span className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-stone-200/80 text-stone-700">
-                Add-on Vault
-              </span>
-            </div>
+            <pre className="leading-relaxed whitespace-pre font-mono">
+              <code>{activeData.content}</code>
+            </pre>
+          </div>
 
-            {/* Modules Content / Placeholder */}
-            <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
-              <div className="rounded-lg border border-dashed border-stone-300 bg-white/70 p-4 text-center">
-                <div className="w-9 h-9 rounded-lg bg-stone-100 border border-stone-200 flex items-center justify-center text-stone-700 mx-auto mb-2.5 shadow-2xs">
-                  <Puzzle className="w-4 h-4 text-stone-700" />
-                </div>
-                <h4 className="text-xs font-bold text-stone-900 font-sans mb-1">
-                  Optional Modules
-                </h4>
-                <p className="text-[11px] text-stone-500 leading-relaxed font-sans">
-                  Modular system prompt add-ons and optional subsystem extensions will be configured here. You can toggle and append them to customize this character architecture.
-                </p>
-              </div>
-
-              {/* Placeholder Module Slots Preview */}
-              <div className="space-y-2">
-                <div className="p-2.5 rounded-lg bg-white border border-stone-200/70 shadow-2xs flex items-center justify-between opacity-60">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-stone-300"></span>
-                    <span className="text-[11px] font-medium text-stone-600 font-sans">Module Slot #1</span>
-                  </div>
-                  <span className="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-stone-100 text-stone-500">
-                    Standby
-                  </span>
-                </div>
-                <div className="p-2.5 rounded-lg bg-white border border-stone-200/70 shadow-2xs flex items-center justify-between opacity-60">
-                  <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-stone-300"></span>
-                    <span className="text-[11px] font-medium text-stone-600 font-sans">Module Slot #2</span>
-                  </div>
-                  <span className="text-[9px] font-mono font-semibold px-1.5 py-0.5 rounded bg-stone-100 text-stone-500">
-                    Standby
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            {/* Modules Bottom Bar */}
-            <div className="mt-auto flex items-center justify-between px-4 py-2 border-t border-stone-200/80 bg-[#EEEEEC] text-xs text-stone-500 font-mono">
-              <span>0 Modules Active</span>
-              <span className="text-[10px] text-stone-400 font-medium">Ready for add-ons</span>
-            </div>
+          {/* Codeblock Bottom Bar */}
+          <div className="flex items-center justify-between px-4 py-2 border-t border-stone-200/80 bg-[#EEEEEC]">
+            <span className="text-xs text-stone-500 font-mono">
+              {lines.length} lines · {activeData.tokens.toLocaleString()} tokens ({activeData.version})
+            </span>
+            <button
+              onClick={() => setIsExpanded(!isExpanded)}
+              className="text-xs font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors"
+            >
+              {isExpanded ? (
+                <>
+                  Collapse
+                  <ChevronUp className="w-3.5 h-3.5 text-stone-500" />
+                </>
+              ) : (
+                <>
+                  View Full ({lines.length} lines)
+                  <ChevronDown className="w-3.5 h-3.5 text-stone-500" />
+                </>
+              )}
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Right-Side Slide-Over Modules Drawer */}
+      {isModulesOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          {/* Backdrop Overlay */}
+          <div
+            className="fixed inset-0 bg-stone-950/30 backdrop-blur-xs transition-opacity duration-300"
+            onClick={() => setIsModulesOpen(false)}
+          />
+
+          {/* Right Slide-Over Panel */}
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-md bg-white border-l border-stone-200 shadow-2xl flex flex-col transform transition ease-in-out duration-300">
+              {/* Drawer Top Bar */}
+              <div className="p-4 sm:p-5 border-b border-stone-200 bg-[#EEEEEC] flex items-center justify-between">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-8 h-8 rounded-lg bg-stone-900 text-white flex items-center justify-center shadow-2xs">
+                    <Boxes className="w-4 h-4 text-amber-300" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <h3 className="font-bold text-sm text-stone-900 font-sans">
+                        Optional Modules
+                      </h3>
+                      <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-stone-200 text-stone-800">
+                        {prompt.model}
+                      </span>
+                    </div>
+                    <p className="text-[11px] text-stone-500 font-sans">
+                      Modular add-ons & system prompt extensions
+                    </p>
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setIsModulesOpen(false)}
+                  className="p-1.5 rounded-lg text-stone-500 hover:text-stone-900 hover:bg-stone-200 transition-colors cursor-pointer"
+                  title="Close Modules panel (Esc)"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              {/* Drawer Content */}
+              <div className="p-5 flex-1 overflow-y-auto space-y-4 font-sans">
+                <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50/70 p-4 text-center">
+                  <div className="w-10 h-10 rounded-xl bg-white border border-stone-200 flex items-center justify-center text-stone-700 mx-auto mb-2.5 shadow-2xs">
+                    <Puzzle className="w-5 h-5 text-stone-800" />
+                  </div>
+                  <h4 className="text-xs font-bold text-stone-900 mb-1">
+                    Module Vault
+                  </h4>
+                  <p className="text-[11px] text-stone-600 leading-relaxed max-w-xs mx-auto">
+                    Optional prompt modules and subsystem extensions will be listed here. You will be able to toggle and attach them directly to your system prompt.
+                  </p>
+                </div>
+
+                {/* Placeholder Module Slots Preview */}
+                <div className="space-y-2.5">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 font-mono">
+                    Available Slots
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#F7F7F5] border border-stone-200 shadow-2xs flex items-center justify-between opacity-70">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-2 h-2 rounded-full bg-stone-400" />
+                      <div>
+                        <span className="text-xs font-semibold text-stone-800 block">Module Slot #1</span>
+                        <span className="text-[10px] text-stone-500">Optional subsystem extension</span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-stone-200/80 text-stone-600">
+                      Standby
+                    </span>
+                  </div>
+                  <div className="p-3.5 rounded-xl bg-[#F7F7F5] border border-stone-200 shadow-2xs flex items-center justify-between opacity-70">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-2 h-2 rounded-full bg-stone-400" />
+                      <div>
+                        <span className="text-xs font-semibold text-stone-800 block">Module Slot #2</span>
+                        <span className="text-[10px] text-stone-500">Optional subsystem extension</span>
+                      </div>
+                    </div>
+                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-stone-200/80 text-stone-600">
+                      Standby
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Drawer Bottom Bar */}
+              <div className="p-4 border-t border-stone-200 bg-[#EEEEEC] flex items-center justify-between font-mono text-xs text-stone-600">
+                <div className="flex items-center gap-1.5">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="font-semibold text-stone-800">0 Modules Active</span>
+                </div>
+                <button
+                  onClick={() => setIsModulesOpen(false)}
+                  className="px-3.5 py-1.5 rounded-lg bg-stone-900 hover:bg-black text-white text-xs font-semibold font-sans cursor-pointer transition-colors shadow-2xs"
+                >
+                  Done
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
