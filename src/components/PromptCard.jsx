@@ -114,6 +114,66 @@ export default function PromptCard({ prompt, index }) {
     return activeData.tokens + activeModulesTokens;
   }, [activeData, activeModulesTokens]);
 
+  // Dynamic OOC commands based on active modules and version selection
+  const supportsOoc = useMemo(() => {
+    if (activeData.isCurrent) return Boolean(prompt.oocCommands && prompt.oocCommands.length > 0);
+    return Boolean(activeData.content && activeData.content.includes('<ooc_command_and_continuity_engine>'));
+  }, [activeData, prompt.oocCommands]);
+
+  const displayedOocCategories = useMemo(() => {
+    if (!prompt.oocCommands || prompt.oocCommands.length === 0) {
+      return [];
+    }
+
+    if (!activeData.isCurrent) {
+      if (!supportsOoc) return [];
+      // Historical monolithic versions (e.g. v19-v14) had built-in multi-NPC and ratio commands
+      return prompt.oocCommands.map((cat) => {
+        if (cat.category.includes('Optional Module Controls')) {
+          return {
+            ...cat,
+            category: `Multi-NPC & Ratio Controls (Built-in for ${activeData.version})`,
+            commands: cat.commands.map((cmd) => ({
+              ...cmd,
+              description: cmd.description.replace(/^\[Enabled by [^\]]+\]\s*/, '')
+            }))
+          };
+        }
+        return cat;
+      });
+    }
+
+    // For current version with modules (Gemini 3.7 Flash)
+    if (prompt.modules && prompt.modules.length > 0) {
+      const hasRatioModule = activeModuleIds.some((id) => id.startsWith('dialogue-ratio'));
+      const hasNpcModule = activeModuleIds.includes('multi-npc-living-world');
+
+      return prompt.oocCommands
+        .map((cat) => {
+          if (cat.category.includes('Optional Module Controls')) {
+            const filteredCommands = cat.commands.filter((cmd) => {
+              if (cmd.syntax.startsWith('{ratio')) return hasRatioModule;
+              if (cmd.syntax.startsWith('{npc')) return hasNpcModule;
+              return true;
+            });
+            return {
+              ...cat,
+              commands: filteredCommands
+            };
+          }
+          return cat;
+        })
+        .filter((cat) => cat.commands.length > 0);
+    }
+
+    // Standard monolithic models
+    return prompt.oocCommands;
+  }, [prompt.oocCommands, prompt.modules, activeData, activeModuleIds, supportsOoc]);
+
+  const totalOocCount = useMemo(() => {
+    return displayedOocCategories.reduce((acc, cat) => acc + cat.commands.length, 0);
+  }, [displayedOocCategories]);
+
   const handleCopy = async () => {
     try {
       await navigator.clipboard.writeText(finalContent);
@@ -409,93 +469,102 @@ export default function PromptCard({ prompt, index }) {
         {/* OOC Commands Dropdown */}
         {prompt.oocCommands && prompt.oocCommands.length > 0 && (
           <div className="mt-4 pt-4 border-t border-stone-200/60">
-            <button
-              onClick={() => setIsOocOpen(!isOocOpen)}
-              className="w-full py-2.5 px-4 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 transition-all flex items-center justify-between cursor-pointer font-sans text-xs font-semibold shadow-2xs"
-            >
-              <div className="flex items-center gap-2">
-                <span className="flex h-5 w-5 items-center justify-center rounded-md bg-stone-900 text-amber-300 text-[10px] font-mono font-bold">
-                  ⚡
-                </span>
-                <span className="font-bold text-stone-900">OOC Director Commands & Controls</span>
-                <span className="px-2 py-0.5 rounded-full bg-stone-100 border border-stone-200 text-stone-700 text-[10px] font-mono">
-                  {prompt.oocCommands.reduce((acc, c) => acc + c.commands.length, 0)} commands
-                </span>
+            {!supportsOoc && !activeData.isCurrent ? (
+              <div className="p-3 rounded-xl bg-stone-50 border border-stone-200/80 text-stone-600 font-mono text-[11px] flex items-center gap-2">
+                <span>ℹ️</span>
+                <span>OOC Director Engine is not present in legacy {activeData.version}. Switch to the latest version for runtime director controls.</span>
               </div>
-              <div className="flex items-center gap-1.5 text-stone-500 font-mono text-[11px]">
-                <span>{isOocOpen ? 'Hide Commands' : 'View Commands'}</span>
-                {isOocOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
-              </div>
-            </button>
-
-            {/* Collapsible OOC Drawer */}
-            {isOocOpen && (
-              <div className="mt-3 p-4 rounded-xl bg-stone-50/70 border border-stone-200 shadow-2xs space-y-4">
-                <div className="text-[11px] text-stone-600 pb-2 border-b border-stone-200/70 flex items-center justify-between">
-                  <span>Send commands inside curly braces <code className="font-mono bg-stone-200 px-1 py-0.5 rounded text-stone-900">{'{...}'}</code>. Persistent settings stay active across all subsequent turns.</span>
-                </div>
-
-                {prompt.oocCommands.map((cat, idx) => (
-                  <div key={idx} className="space-y-2">
-                    <h4 className="text-[11px] font-bold uppercase tracking-wider text-stone-600 font-mono flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-stone-400"></span>
-                      {cat.category}
-                    </h4>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
-                      {cat.commands.map((cmd, cIdx) => (
-                        <div
-                          key={cIdx}
-                          className="p-3 rounded-lg bg-white border border-stone-200 hover:border-stone-300 transition-all flex flex-col justify-between shadow-2xs"
-                        >
-                          <div>
-                            <div className="flex items-center justify-between gap-2 mb-1.5">
-                              <span className="font-semibold text-xs text-stone-900 font-sans">
-                                {cmd.name}
-                              </span>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCopyCommand(cmd.example || cmd.syntax);
-                                }}
-                                className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-stone-50 border border-stone-200 hover:bg-stone-100 text-stone-700 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
-                                title="Copy example command"
-                              >
-                                {copiedCmd === (cmd.example || cmd.syntax) ? (
-                                  <>
-                                    <Check className="w-3 h-3 text-emerald-600" />
-                                    <span className="text-emerald-700">Copied</span>
-                                  </>
-                                ) : (
-                                  <>
-                                    <Copy className="w-3 h-3 text-stone-400" />
-                                    <span>Copy</span>
-                                  </>
-                                )}
-                              </button>
-                            </div>
-                            <p className="text-[11px] text-stone-600 leading-relaxed mb-2">
-                              {cmd.description}
-                            </p>
-                          </div>
-
-                          <div className="pt-2 border-t border-stone-100 font-mono text-[11px] flex flex-col gap-1">
-                            <div className="flex items-center gap-1.5 text-stone-800 font-bold bg-stone-50 px-2 py-1 rounded border border-stone-200/60 overflow-x-auto">
-                              <span className="text-stone-400 text-[10px] select-none">CMD:</span>
-                              <code>{cmd.syntax}</code>
-                            </div>
-                            {cmd.example && (
-                              <div className="text-[10px] text-stone-500 truncate px-1">
-                                <span className="font-semibold text-stone-400 select-none">Ex: </span>
-                                <span className="text-stone-600">{cmd.example}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+            ) : (
+              <>
+                <button
+                  onClick={() => setIsOocOpen(!isOocOpen)}
+                  className="w-full py-2.5 px-4 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 transition-all flex items-center justify-between cursor-pointer font-sans text-xs font-semibold shadow-2xs"
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-md bg-stone-900 text-amber-300 text-[10px] font-mono font-bold">
+                      ⚡
+                    </span>
+                    <span className="font-bold text-stone-900">OOC Director Commands & Controls</span>
+                    <span className="px-2 py-0.5 rounded-full bg-stone-100 border border-stone-200 text-stone-700 text-[10px] font-mono">
+                      {totalOocCount} commands
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <div className="flex items-center gap-1.5 text-stone-500 font-mono text-[11px]">
+                    <span>{isOocOpen ? 'Hide Commands' : 'View Commands'}</span>
+                    {isOocOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+                  </div>
+                </button>
+
+                {/* Collapsible OOC Drawer */}
+                {isOocOpen && (
+                  <div className="mt-3 p-4 rounded-xl bg-stone-50/70 border border-stone-200 shadow-2xs space-y-4">
+                    <div className="text-[11px] text-stone-600 pb-2 border-b border-stone-200/70 flex items-center justify-between">
+                      <span>Send commands inside curly braces <code className="font-mono bg-stone-200 px-1 py-0.5 rounded text-stone-900">{'{...}'}</code>. Persistent settings stay active across all subsequent turns.</span>
+                    </div>
+
+                    {displayedOocCategories.map((cat, idx) => (
+                      <div key={idx} className="space-y-2">
+                        <h4 className="text-[11px] font-bold uppercase tracking-wider text-stone-600 font-mono flex items-center gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-stone-400"></span>
+                          {cat.category}
+                        </h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+                          {cat.commands.map((cmd, cIdx) => (
+                            <div
+                              key={cIdx}
+                              className="p-3 rounded-lg bg-white border border-stone-200 hover:border-stone-300 transition-all flex flex-col justify-between shadow-2xs"
+                            >
+                              <div>
+                                <div className="flex items-center justify-between gap-2 mb-1.5">
+                                  <span className="font-semibold text-xs text-stone-900 font-sans">
+                                    {cmd.name}
+                                  </span>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      handleCopyCommand(cmd.example || cmd.syntax);
+                                    }}
+                                    className="px-2 py-0.5 rounded text-[10px] font-mono font-semibold bg-stone-50 border border-stone-200 hover:bg-stone-100 text-stone-700 transition-colors flex items-center gap-1 cursor-pointer shrink-0"
+                                    title="Copy example command"
+                                  >
+                                    {copiedCmd === (cmd.example || cmd.syntax) ? (
+                                      <>
+                                        <Check className="w-3 h-3 text-emerald-600" />
+                                        <span className="text-emerald-700">Copied</span>
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Copy className="w-3 h-3 text-stone-400" />
+                                        <span>Copy</span>
+                                      </>
+                                    )}
+                                  </button>
+                                </div>
+                                <p className="text-[11px] text-stone-600 leading-relaxed mb-2">
+                                  {cmd.description}
+                                </p>
+                              </div>
+
+                              <div className="pt-2 border-t border-stone-100 font-mono text-[11px] flex flex-col gap-1">
+                                <div className="flex items-center gap-1.5 text-stone-800 font-bold bg-stone-50 px-2 py-1 rounded border border-stone-200/60 overflow-x-auto">
+                                  <span className="text-stone-400 text-[10px] select-none">CMD:</span>
+                                  <code>{cmd.syntax}</code>
+                                </div>
+                                {cmd.example && (
+                                  <div className="text-[10px] text-stone-500 truncate px-1">
+                                    <span className="font-semibold text-stone-400 select-none">Ex: </span>
+                                    <span className="text-stone-600">{cmd.example}</span>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
         )}
