@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal, History, RotateCcw, Boxes, Puzzle, X } from 'lucide-react';
 
 export default function PromptCard({ prompt, index }) {
@@ -495,7 +496,7 @@ export default function PromptCard({ prompt, index }) {
       </div>
 
       {/* Right-Side Slide-Over Modules Drawer */}
-      {isModulesOpen && (
+      {isModulesOpen && typeof document !== 'undefined' && createPortal(
         <div className="fixed inset-0 z-50 overflow-hidden">
           {/* Backdrop Overlay */}
           <div
@@ -597,7 +598,8 @@ export default function PromptCard({ prompt, index }) {
               </div>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
