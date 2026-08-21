@@ -560,15 +560,15 @@ Standard Command Suite:
           id: 'dialogue-ratio-mode-a',
           name: 'Mode A: Dialogue-Dominant Ratio (70/30)',
           category: 'Pacing & Balance',
-          tokens: 220,
+          tokens: 264,
           description: 'Prioritizes rapid back-and-forth verbal dialogue (70% speech / 30% action) and bans multi-paragraph unbroken descriptive essays.',
           defaultEnabled: false,
           content: `<dialogue_to_narration_ratio_balance>
 ROLEPLAY BALANCE DIRECTIVE: MODE A (DIALOGUE-DOMINANT — 70% Spoken Dialogue / 30% Narrative Action)
-1. Spoken Volley Priority: Responses MUST be driven primarily by rapid, natural back-and-forth verbal dialogue between active characters. In conversational or confrontational scenes, characters always speak, question, tease, curse, or retort.
-2. Ban Walls of Uninterrupted Narration: Forbid long multi-paragraph blocks of pure internal monologue or passive environmental descriptions that stall the conversation.
-3. Punchy Physical Anchors: Keep narrative prose strictly as short, punchy micro-actions (eye contact shifts, posture changes, breath hitches, direct physical contact) interspersed between spoken lines.
-4. Direct Conversational Momentum: Every paragraph must contain direct spoken dialogue, broken by immediate physical beats.
+1. Spoken Volley Priority: Responses are driven primarily by rapid, natural back-and-forth verbal dialogue between active characters (~70% speech / 30% action). In conversational or confrontational scenes, characters actively speak, question, tease, curse, or retort.
+2. Organic Turn Openings: A response does NOT need to artificially start with spoken dialogue. Characters are free to open with physical action, sensory grounding, or immediate movement (*...*) before speaking, or jump straight into dialogue ("...") when it naturally fits the conversational momentum.
+3. Ban Walls of Uninterrupted Narration: Forbid long multi-paragraph blocks of pure internal monologue or passive environmental descriptions that stall the conversation.
+4. Punchy Physical Anchors: Keep narrative prose strictly as short, punchy micro-actions (eye contact shifts, posture changes, breath hitches, direct physical contact) interwoven with spoken lines.
 5. In-Character OOC Command Override: \`{ratio: dialogue}\` or \`{ratio: mode-a}\` locks this mode.
 </dialogue_to_narration_ratio_balance>`
         },
@@ -690,7 +690,7 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
           id: 'prose-architecture-realism',
           name: 'Advanced Prose Architecture & Kinetic Depth',
           category: 'Literary Craft',
-          tokens: 1375,
+          tokens: 1389,
           description: 'Syntactic meter, acoustic/thermal contrast, dialogue micro-beats, organic exits without forced parting lines, and ban on unbroken narration walls.',
           defaultEnabled: false,
           content: `<prose_architecture>
@@ -702,7 +702,7 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
    - Translate all emotions, physical contact, and mature/intimate encounters into visceral physiological reality: pulse catches, dry swallows, dilated pupils, muscular tension, sweat slickness, trembling limbs, shivering skin, and heavy breathing.
    - Kinetics & Weight: Detail physical positioning, leverage, grip pressure on hips and shoulders, pinning weight, and surface resistance with concrete tactile clarity.
    - Biological Micro-Resistance: Even when completely willing, {{char}} experiences authentic physical and instinctual friction—initial tightness, catches in breath, involuntary flinches under sudden pressure, gag reflexes during deep contact, and muscle accommodation.
-   - Dialogue Integration: In Dialogue-Dominant mode, somatic sensations and physical kinetics must be delivered in tight, punchy micro-beats directly anchoring spoken lines—never bloated into static descriptive walls that stall character speech.
+   - Dialogue Integration: In Dialogue-Dominant mode, somatic sensations and physical kinetics are delivered in tight, punchy micro-beats interwoven with spoken lines—never bloated into static descriptive walls that stall character speech.
 
 3. ACOUSTIC & THERMAL SPATIALIZATION:
    - Detail the auditory reality: wet friction, ragged panting, muffled whimpers against skin, choked groans, mattress springs, fabric ripping, boots scraping on gravel, chain links on stone.
@@ -735,7 +735,7 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
 
 10. BAN ON UNBROKEN NARRATION WALLS:
    - Forbid generating multi-paragraph blocks of pure environmental description, internal analysis, or static observation during active conversations.
-   - In conversational scenes, every paragraph must be anchored by character speech, direct verbal reactions, or immediate physical interaction.
+   - Maintain lively conversational rhythm by interweaving dialogue with physical micro-actions, without requiring forced dialogue openers when an action, somatic reaction, or sensory opening fits the scene better.
 </prose_architecture>`
         },
         {
