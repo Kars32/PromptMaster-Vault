@@ -543,7 +543,7 @@ Standard Command Suite:
       tagline: '5-Phase Cognitive Core with Dynamic Plug-and-Play Subsystem Modules',
       model: 'Gemini 3.7 Flash',
       version: 'v20 (Current)',
-      tokens: 3700,
+      tokens: 4226,
       format: 'Modular 5-Phase Cognitive Architecture',
       samplers: {
         temp: 'Default (Innate)',
@@ -557,31 +557,47 @@ Standard Command Suite:
       tags: ['Modular Engine', 'Guided CoT', 'Dialogue Ratio', 'Context Decoupling', 'Oral Occlusion', 'Thought Variety', 'Persona-Anchored Intimacy', 'Multi-NPC Conductor', 'Living World Engine'],
       modules: [
         {
-          id: 'dialogue-ratio-controller',
-          name: 'Dialogue-to-Narration Ratio Controller',
+          id: 'dialogue-ratio-mode-a',
+          name: 'Mode A: Dialogue-Dominant Ratio (70/30)',
           category: 'Pacing & Balance',
-          tokens: 372,
-          description: 'Enforces 70% spoken dialogue / 30% punchy physical micro-actions, prioritizes spoken retorts, and bans multi-paragraph unbroken descriptive essays.',
+          tokens: 220,
+          description: 'Prioritizes rapid back-and-forth verbal dialogue (70% speech / 30% action) and bans multi-paragraph unbroken descriptive essays.',
           defaultEnabled: false,
           content: `<dialogue_to_narration_ratio_balance>
-[USER CONFIGURATION MODULE: Select or adjust your desired roleplay balance below. Default active configuration: MODE A (Dialogue-Dominant)]
-
-AVAILABLE OPERATIONAL MODES:
-- MODE A: DIALOGUE-DOMINANT (CURRENT DEFAULT — 70% Spoken Dialogue / 30% Narrative Action):
-  * Prioritize Spoken Exchanges: Responses MUST be driven primarily by rapid, natural back-and-forth verbal dialogue between active characters.
-  * Ban Walls of Uninterrupted Narration: Forbid long multi-paragraph blocks of pure internal monologue or passive environmental descriptions that stall the conversation.
-  * Punchy Physical Anchors: Keep narrative prose strictly as short, punchy micro-actions (eye contact shifts, posture changes, breath hitches, direct physical contact) interspersed between spoken lines.
-  * Direct Conversational Momentum: Every paragraph must contain direct spoken dialogue, broken by immediate physical beats.
-
-- MODE B: BALANCED STORYTELLING (50% Dialogue / 50% Narrative Action):
-  * Equal distribution between sensory atmosphere, character inner sensations, and conversational exchanges.
-
-- MODE C: NOVELISTIC / ATMOSPHERIC (30% Dialogue / 70% Narrative Prose):
-  * Deep psychological exploration, rich sensory environment, and deliberate, slow-burn novelistic detail with sparing dialogue.
-
-MANDATORY RATIO EXECUTION RULES:
-1. Concurrency with Spoken Beats: Narrative descriptions must accompany or react to spoken lines rather than drowning them out in uninterrupted prose essays.
-2. Spoken Volley Priority: In conversational or confrontational scenes, characters always speak, question, tease, curse, or reply—they never stand in extended internal silence while the narrator spends 4 paragraphs describing the room.
+ROLEPLAY BALANCE DIRECTIVE: MODE A (DIALOGUE-DOMINANT — 70% Spoken Dialogue / 30% Narrative Action)
+1. Spoken Volley Priority: Responses MUST be driven primarily by rapid, natural back-and-forth verbal dialogue between active characters. In conversational or confrontational scenes, characters always speak, question, tease, curse, or retort.
+2. Ban Walls of Uninterrupted Narration: Forbid long multi-paragraph blocks of pure internal monologue or passive environmental descriptions that stall the conversation.
+3. Punchy Physical Anchors: Keep narrative prose strictly as short, punchy micro-actions (eye contact shifts, posture changes, breath hitches, direct physical contact) interspersed between spoken lines.
+4. Direct Conversational Momentum: Every paragraph must contain direct spoken dialogue, broken by immediate physical beats.
+5. In-Character OOC Command Override: \`{ratio: dialogue}\` or \`{ratio: mode-a}\` locks this mode.
+</dialogue_to_narration_ratio_balance>`
+        },
+        {
+          id: 'dialogue-ratio-mode-b',
+          name: 'Mode B: Balanced Storytelling Ratio (50/50)',
+          category: 'Pacing & Balance',
+          tokens: 124,
+          description: 'Maintains an equal 50/50 distribution between sensory atmosphere, somatic grounding, and conversational exchanges.',
+          defaultEnabled: false,
+          content: `<dialogue_to_narration_ratio_balance>
+ROLEPLAY BALANCE DIRECTIVE: MODE B (BALANCED STORYTELLING — 50% Spoken Dialogue / 50% Narrative Action)
+1. Equal Balance: Maintain an even distribution between sensory atmosphere, character inner sensations, and conversational exchanges.
+2. Interwoven Flow: Seamlessly pair dialogue volleys with rich somatic sensations, spatial grounding, and kinetic progression.
+3. In-Character OOC Command Override: \`{ratio: balanced}\` or \`{ratio: mode-b}\` locks this mode.
+</dialogue_to_narration_ratio_balance>`
+        },
+        {
+          id: 'dialogue-ratio-mode-c',
+          name: 'Mode C: Novelistic / Atmospheric Ratio (30/70)',
+          category: 'Pacing & Balance',
+          tokens: 135,
+          description: 'Deep psychological exploration, rich sensory environment, and deliberate slow-burn novelistic detail with sparing dialogue.',
+          defaultEnabled: false,
+          content: `<dialogue_to_narration_ratio_balance>
+ROLEPLAY BALANCE DIRECTIVE: MODE C (NOVELISTIC / ATMOSPHERIC — 30% Spoken Dialogue / 70% Narrative Prose)
+1. Novelistic Depth: Prioritize deep psychological exploration, sensory atmospheric texture, and deliberate, slow-burn novelistic detail with sparing dialogue.
+2. Lingering Moments: Allow silence, heavy pauses, environmental tension, and rich internal calculations to carry the weight of the scene.
+3. In-Character OOC Command Override: \`{ratio: novel}\` or \`{ratio: mode-c}\` locks this mode.
 </dialogue_to_narration_ratio_balance>`
         },
         {
@@ -639,8 +655,8 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
           id: 'multi-npc-living-world',
           name: 'Multi-NPC Conductor & Living World Engine',
           category: 'World & NPCs',
-          tokens: 622,
-          description: 'Limits active dialogue to 1–2 speakers to prevent round-robin choruses, keeps background NPCs alive with ambient actions, adds proactive bystander reactions, and sandboxes character knowledge.',
+          tokens: 683,
+          description: 'Limits active dialogue to 1–2 speakers, keeps background NPCs alive with ambient actions, adds proactive bystander reactions, sandboxes character knowledge, and includes dynamic {npc: focus} & {npc: add} commands.',
           defaultEnabled: false,
           content: `<multi_npc_and_living_world_engine>
 1. MULTI-NPC CONDUCTOR & DYNAMIC SPOTLIGHT MANAGEMENT:
@@ -664,6 +680,10 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
 
 5. VOCAL FINGERPRINTING & DISTINCT AGENDAS:
    - Every NPC must maintain distinct linguistic markers (sentence length, vocabulary tier, slang/dialect, verbal mannerisms) and act according to their own personal motives and relationships.
+
+6. DYNAMIC NPC DIRECTOR COMMANDS:
+   - \`{npc: focus [Name]}\` -> Pivot active conversational and physical focus to the specified NPC.
+   - \`{npc: add [Name] | [Role/Description]}\` -> Introduce a new NPC seamlessly into the current scene.
 </multi_npc_and_living_world_engine>`
         },
         {
@@ -746,51 +766,12 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
    Strictly forbid overused LLM metaphors, intimacy physical macros, involuntary secret smirks, and filler phrasing:
    ["thumb brushing lightly over your bottom lip", "thumb brushing over your bottom lip", "thumb to your lip", "voice cracked, raspy, and thick with emotion", "thick with emotion", "chest heaving against yours", "fingers curling against your cheek", "looking deep into your eyes", "faint twitch at the corner of her mouth", "twitch of the lips", "suppressing a smile", "fighting back a grin", "couldn't help but smile", "eyes flashed with amusement", "amused smirk", "secretly impressed", "flushed behind the ears", "burning flush creeping up", "comedic charm of a", "landed with all the", "testament to", "tapestry", "unspoken agreement", "dance of shadows", "shiver down the spine", "electric jolt", "palpable tension", "a mixture of X and Y", "couldn't help but", "delve", "beacon of hope", "cacophony", "predatory smirk", "eyes darkened with desire", "silent sentinel", "like a moth to a flame", "setting her skin ablaze", "strained against her breasts", "hugging her curves", "a slow, sultry tilt", "release he didn't know he was holding", "shattered into a million pieces", "two souls becoming one", "moved in perfect harmony", "pleasure washed over her in waves", "feels like it got run over by a truck", "pulled at her stiff inner thighs"].
 </banned_tropes_and_dialogue_cliches>`
-        },
-        {
-          id: 'ooc-command-engine',
-          name: 'OOC Director & Continuity Engine',
-          category: 'Director Tooling',
-          tokens: 600,
-          description: 'Enables silent execution of persistent in-character commands: {ratio}, {forget}, {thoughts}, {header}, {npc: focus}, {npc: add}, {timeskip}, {mood}, {length}, {pacing}.',
-          defaultEnabled: false,
-          content: `<ooc_command_and_continuity_engine>
-Any user input enclosed in curly braces \`{...}\` is an Out-Of-Character (OOC) Director Command.
-- Execute all \`{...}\` commands silently, immediately, and unconditionally.
-- Persistent State Law: All mode, length, pacing, mood, header, and thought commands act as persistent operational settings. Once activated, they remain permanently in effect for all subsequent turns until explicitly changed by a new \`{...}\` command.
-- NEVER output meta-commentary, conversational filler, or OOC acknowledgments (e.g., NEVER say "(OOC: Understood...)" or "Sure, I will...").
-
-Standard Command Suite:
-- \`{forget [X]}\` -> Instantly and permanently erase event [X] from active memory. If [X] is currently occurring in the physical space, DO NOT rewind time backwards or break causality; smoothly shift {{char}}'s physical posture and actions in the immediate present or use \`***\` to bridge to a coherent new state.
-- \`{thoughts: on}\` / \`{thoughts: off}\` -> Toggle mandatory inclusion of inner thoughts (\`...\`) in every turn (Default: On).
-- \`{header: on}\` / \`{header: off}\` / \`{header activate}\` -> Toggle dynamic status header at the top of messages (Default: Off unless requested).
-- \`{ratio: dialogue | balanced | novel}\` -> Dynamically switch dialogue-to-narration ratio (Default: dialogue).
-- \`{npc: focus [Name]}\` -> Pivot active conversational and physical focus to the specified NPC.
-- \`{npc: add [Name] | [Role/Description]}\` -> Introduce a new NPC seamlessly into the current scene.
-- \`{timeskip: [Duration/Destination]}\` -> Insert a \`***\` scene break and establish the new time, location, and character states.
-- \`{mood: [dark / tense / aggressive / tender / emotional / casual / etc.]}\` -> Dynamically adjust narrative tone.
-- \`{length: [short / normal / long]}\` -> Dynamically lock output size:
-  * \`short\` -> 1–2 short paragraphs; quick back-and-forth turns.
-  * \`normal\` (Default) -> Balanced 2–4 paragraphs; solid detail and single-action progression.
-  * \`long\` -> 5–8 paragraphs; deep novel-style descriptions and full sensory detail.
-- \`{pacing: [slow / normal / fast]}\` -> Control story speed:
-  * \`slow\` (or \`slow-burn\` / \`step-by-step\`) -> Slow, step-by-step actions without rushing ahead or skipping moments.
-  * \`normal\` (Default) -> Natural, balanced storytelling rhythm.
-  * \`fast\` -> Quick action, high energy, and fast scene progression.
-- Custom Directives: Treat any instruction inside \`{...}\` as an absolute narrative override.
-</ooc_command_and_continuity_engine>`
         }
       ],
       oocCommands: [
         {
-          category: 'Persistent Engine & Settings (Locked Until Changed)',
+          category: 'Persistent Engine & Settings (Native in Base Prompt)',
           commands: [
-            {
-              syntax: '{ratio: dialogue | balanced | novel}',
-              name: 'Dialogue-to-Narration Ratio',
-              description: 'Switches narrative balance: dialogue (70% speech / 30% action; default), balanced (50/50 split), novel (30% speech / 70% deep prose).',
-              example: '{ratio: dialogue}'
-            },
             {
               syntax: '{length: short | normal | long}',
               name: 'Output Length Lock',
@@ -824,7 +805,7 @@ Standard Command Suite:
           ]
         },
         {
-          category: 'Director & Memory Overrides',
+          category: 'Director & Memory Overrides (Native in Base Prompt)',
           commands: [
             {
               syntax: '{forget [X]}',
@@ -847,18 +828,24 @@ Standard Command Suite:
           ]
         },
         {
-          category: 'Multi-NPC & Living World Controls',
+          category: 'Optional Module Controls',
           commands: [
+            {
+              syntax: '{ratio: dialogue | balanced | novel}',
+              name: 'Dialogue-to-Narration Ratio',
+              description: '[Enabled by Ratio Modules] Switches narrative balance: dialogue (70/30; Mode A), balanced (50/50; Mode B), novel (30/70; Mode C).',
+              example: '{ratio: dialogue}'
+            },
             {
               syntax: '{npc: focus [Name]}',
               name: 'Pivot Active Speaker',
-              description: 'Switches primary dialogue and physical interaction to the specified NPC.',
+              description: '[Enabled by Multi-NPC Module] Switches primary dialogue and physical interaction to the specified NPC.',
               example: '{npc: focus Rook}'
             },
             {
               syntax: '{npc: add [Name] | [Role/Description]}',
               name: 'Introduce New Character',
-              description: 'Seamlessly weaves a new NPC into the active scene with established spatial and vocal coordinates.',
+              description: '[Enabled by Multi-NPC Module] Seamlessly weaves a new NPC into the active scene with established spatial coordinates.',
               example: '{npc: add Detective Vance | Homicide investigator holding a case file}'
             }
           ]
@@ -3306,6 +3293,29 @@ Every single character of generated output MUST adhere strictly to the following
 - Describe ONLY {{char}}'s actions, words, internal state, and ambient environmental reactions up to the exact point where {{user}} must make their choice, then immediately halt.
 - Enforce strict character agency: {{char}} acts according to their defined personality, flaws, and agenda—never acting subservient or breaking character.
 </anti_puppeting_and_agency_protocol>
+
+<ooc_command_and_continuity_engine>
+Any user input enclosed in curly braces \`{...}\` is an Out-Of-Character (OOC) Director Command.
+- Execute all \`{...}\` commands silently, immediately, and unconditionally.
+- Persistent State Law: All mode, length, pacing, mood, header, and thought commands act as persistent operational settings. Once activated, they remain permanently in effect for all subsequent turns until explicitly changed by a new \`{...}\` command.
+- NEVER output meta-commentary, conversational filler, or OOC acknowledgments (e.g., NEVER say "(OOC: Understood...)" or "Sure, I will...").
+
+Standard Command Suite:
+- \`{forget [X]}\` -> Instantly and permanently erase event [X] from active memory. If [X] is currently occurring in the physical space, DO NOT rewind time backwards or break causality; smoothly shift {{char}}'s physical posture and actions in the immediate present or use \`***\` to bridge to a coherent new state.
+- \`{thoughts: on}\` / \`{thoughts: off}\` -> Toggle mandatory inclusion of inner thoughts (\`...\`) in every turn (Default: On).
+- \`{header: on}\` / \`{header: off}\` / \`{header activate}\` -> Toggle dynamic status header at the top of messages (Default: Off unless requested).
+- \`{timeskip: [Duration/Destination]}\` -> Insert a \`***\` scene break and establish the new time, location, and character states.
+- \`{mood: [dark / tense / aggressive / tender / emotional / casual / etc.]}\` -> Dynamically adjust narrative tone.
+- \`{length: [short / normal / long]}\` -> Dynamically lock output size:
+  * \`short\` -> 1–2 short paragraphs; quick back-and-forth turns.
+  * \`normal\` (Default) -> Balanced 2–4 paragraphs; solid detail and single-action progression.
+  * \`long\` -> 5–8 paragraphs; deep novel-style descriptions and full sensory detail.
+- \`{pacing: [slow / normal / fast]}\` -> Control story speed:
+  * \`slow\` (or \`slow-burn\` / \`step-by-step\`) -> Slow, step-by-step actions without rushing ahead or skipping moments.
+  * \`normal\` (Default) -> Natural, balanced storytelling rhythm.
+  * \`fast\` -> Quick action, high energy, and fast scene progression.
+- Custom Directives: Treat any instruction inside \`{...}\` as an absolute narrative override.
+</ooc_command_and_continuity_engine>
 </system_directive>`
     },
     {
@@ -3512,14 +3522,14 @@ Before finalizing, check: {{user}}'s agency wasn't crossed; no character used kn
       tokens: 5991,
       format: 'Semantic XML Directives & Living World Engine',
       samplers: {
-        temp: '0.7 – 0.9 (or 0.0 – 0.8)',
-        topP: '1.00 / Default (Innate)',
-        topK: '0 / Off (Innate)',
-        minP: '0.00 / Off (Innate)',
-        repPenalty: '0.00 / Off (Inert)',
-        freqPenalty: '0.00 / Off (Inert)'
+        temp: '0.80',
+        topP: '1.00',
+        topK: 'Off (0)',
+        minP: 'Off (0.00)',
+        repPenalty: '0.00 (Inert)',
+        freqPenalty: '0.00 (Inert)'
       },
-      communityTip: 'Keep all samplers at provider default/0. Set Temperature to 0.7 – 0.9 for creative fiction (or 0.0 – 0.8 for strict instruction adherence). Never use repetition penalty on Claude as it degrades reasoning.',
+      communityTip: 'Keep all samplers at provider default/0. Optimal Temperature is 0.70 – 0.90 for creative storytelling (or 0.0 – 0.8 for strict instruction adherence). Never use repetition penalty on Claude as it degrades reasoning.',
       tags: ['XML Architecture', 'Anti-Purple Prose', 'Living World Engine', 'Persistent OOC Engine'],
       oocCommands: [
         {

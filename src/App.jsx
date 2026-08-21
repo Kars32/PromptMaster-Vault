@@ -102,10 +102,10 @@ export default function App() {
                   Curated Roleplay Prompts
                 </span>
                 <h1 className="text-2xl sm:text-4xl font-extrabold text-stone-950 tracking-tight mb-3">
-                  Tested System Prompts for Gemini & Claude
+                  Tested System Prompts for Modern LLMs
                 </h1>
                 <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-2xl mb-6">
-                  High-quality system prompts designed for creative roleplay in <strong>SillyTavern</strong> and <strong>Janitor AI</strong>. They prevent the AI from talking for you, keep characters in-personality, and produce natural, immersive prose.
+                  High-quality system prompts tailored for <strong>Gemini</strong>, <strong>Claude</strong>, <strong>DeepSeek</strong>, <strong>Nemotron</strong>, <strong>Laguna</strong>, and <strong>Hunyuan</strong> in <strong>SillyTavern</strong>, <strong>Janitor AI</strong>, and OpenRouter. They enforce strict anti-puppeting, preserve emotional inertia, and produce natural, uninhibited prose.
                 </p>
 
                 {/* Direct Action Buttons */}
