@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal, History, RotateCcw, Boxes, Puzzle, X } from 'lucide-react';
+import { Copy, Check, Download, ChevronDown, ChevronUp, Cpu, Hash, Terminal, History, RotateCcw, Boxes, Puzzle, X, Plus, Trash2, Eye, EyeOff, Layers, Sparkles } from 'lucide-react';
 
 export default function PromptCard({ prompt, index }) {
   const [copied, setCopied] = useState(false);
@@ -10,6 +10,16 @@ export default function PromptCard({ prompt, index }) {
   const [isOocOpen, setIsOocOpen] = useState(false);
   const [isModulesOpen, setIsModulesOpen] = useState(false);
   const [copiedCmd, setCopiedCmd] = useState(null);
+  const [copiedModuleId, setCopiedModuleId] = useState(null);
+  const [expandedPreviewIds, setExpandedPreviewIds] = useState([]);
+
+  // Active module IDs state
+  const [activeModuleIds, setActiveModuleIds] = useState(() => {
+    if (prompt.modules) {
+      return prompt.modules.filter((m) => m.defaultEnabled).map((m) => m.id);
+    }
+    return [];
+  });
 
   // Close modules drawer on Escape key
   useEffect(() => {
@@ -23,6 +33,35 @@ export default function PromptCard({ prompt, index }) {
   }, [isModulesOpen]);
 
   const hasHistory = prompt.history && prompt.history.length > 0;
+  const availableModules = prompt.modules || [];
+
+  const toggleModule = (id) => {
+    setActiveModuleIds((prev) =>
+      prev.includes(id) ? prev.filter((mId) => mId !== id) : [...prev, id]
+    );
+  };
+
+  const togglePreview = (id) => {
+    setExpandedPreviewIds((prev) =>
+      prev.includes(id) ? prev.filter((mId) => mId !== id) : [...prev, id]
+    );
+  };
+
+  const selectAllModules = () => {
+    setActiveModuleIds(availableModules.map((m) => m.id));
+  };
+
+  const deselectAllModules = () => {
+    setActiveModuleIds([]);
+  };
+
+  const activeModules = useMemo(() => {
+    return availableModules.filter((m) => activeModuleIds.includes(m.id));
+  }, [availableModules, activeModuleIds]);
+
+  const activeModulesTokens = useMemo(() => {
+    return activeModules.reduce((acc, m) => acc + (m.tokens || 0), 0);
+  }, [activeModules]);
 
   // Determine active version data
   const activeData = useMemo(() => {
@@ -56,13 +95,42 @@ export default function PromptCard({ prompt, index }) {
     };
   }, [prompt, selectedVersionKey, hasHistory]);
 
+  // Final combined content & token counts with attached modules
+  const finalContent = useMemo(() => {
+    if (!activeData.isCurrent || activeModules.length === 0) {
+      return activeData.content;
+    }
+    const moduleText = activeModules.map((m) => m.content).join('\n\n');
+    if (activeData.content.includes('</system_directive>')) {
+      return activeData.content.replace('</system_directive>', `${moduleText}\n</system_directive>`);
+    }
+    return `${activeData.content}\n\n${moduleText}`;
+  }, [activeData, activeModules]);
+
+  const finalTokens = useMemo(() => {
+    if (!activeData.isCurrent || activeModules.length === 0) {
+      return activeData.tokens;
+    }
+    return activeData.tokens + activeModulesTokens;
+  }, [activeData, activeModulesTokens]);
+
   const handleCopy = async () => {
     try {
-      await navigator.clipboard.writeText(activeData.content);
+      await navigator.clipboard.writeText(finalContent);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error('Failed to copy text: ', err);
+    }
+  };
+
+  const handleCopyModuleSnippet = async (id, content) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      setCopiedModuleId(id);
+      setTimeout(() => setCopiedModuleId(null), 1500);
+    } catch (err) {
+      console.error('Failed to copy module: ', err);
     }
   };
 
@@ -79,18 +147,19 @@ export default function PromptCard({ prompt, index }) {
   const handleDownload = () => {
     const isXml = prompt.format.toLowerCase().includes('xml');
     const ext = isXml ? 'xml' : 'txt';
-    const blob = new Blob([activeData.content], { type: 'text/plain;charset=utf-8' });
+    const blob = new Blob([finalContent], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `${prompt.id}_${activeData.version.replace(/[^a-zA-Z0-9_-]/g, '_')}.${ext}`;
+    const moduleSuffix = activeModules.length > 0 ? `_with_${activeModules.length}_modules` : '';
+    link.download = `${prompt.id}_${activeData.version.replace(/[^a-zA-Z0-9_-]/g, '_')}${moduleSuffix}.${ext}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   };
 
-  const lines = activeData.content.split('\n');
+  const lines = finalContent.split('\n');
 
   return (
     <div className="bg-white rounded-2xl border border-stone-200 shadow-xs mb-8 overflow-hidden transition-all duration-200">
@@ -201,7 +270,7 @@ export default function PromptCard({ prompt, index }) {
               {/* Exact Token Badge */}
               <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-xs font-bold bg-stone-900 text-stone-100 font-mono">
                 <Hash className="w-3 h-3 text-stone-400" />
-                {activeData.tokens.toLocaleString()} tokens
+                {finalTokens.toLocaleString()} tokens
               </span>
             </div>
 
@@ -235,16 +304,24 @@ export default function PromptCard({ prompt, index }) {
             <button
               onClick={() => setIsModulesOpen(!isModulesOpen)}
               className={`px-3.5 py-2 rounded-xl text-xs font-semibold border transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 ${
-                isModulesOpen
+                activeModules.length > 0
+                  ? 'bg-amber-50 border-amber-300 text-amber-950 hover:bg-amber-100'
+                  : isModulesOpen
                   ? 'bg-stone-900 text-white border-stone-900'
                   : 'bg-white border-stone-200 hover:bg-stone-50 text-stone-700'
               }`}
               title="View and toggle optional system modules"
             >
-              <Boxes className={`w-3.5 h-3.5 ${isModulesOpen ? 'text-amber-300' : 'text-stone-500'}`} />
+              <Boxes className={`w-3.5 h-3.5 ${activeModules.length > 0 ? 'text-amber-600' : isModulesOpen ? 'text-amber-300' : 'text-stone-500'}`} />
               <span>Modules</span>
-              <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${isModulesOpen ? 'bg-stone-800 text-stone-300' : 'bg-stone-100 text-stone-700'}`}>
-                0
+              <span className={`px-1.5 py-0.2 rounded text-[10px] font-mono font-bold ${
+                activeModules.length > 0
+                  ? 'bg-amber-200 text-amber-900'
+                  : isModulesOpen
+                  ? 'bg-stone-800 text-stone-300'
+                  : 'bg-stone-100 text-stone-700'
+              }`}>
+                {activeModules.length}
               </span>
             </button>
             <button
@@ -434,11 +511,15 @@ export default function PromptCard({ prompt, index }) {
               </span>
               <button
                 onClick={() => setIsModulesOpen(true)}
-                className="text-[11px] font-semibold text-stone-700 hover:text-stone-950 flex items-center gap-1 cursor-pointer transition-colors px-2 py-0.5 rounded hover:bg-stone-200/70"
+                className={`text-[11px] font-semibold flex items-center gap-1 cursor-pointer transition-colors px-2 py-0.5 rounded ${
+                  activeModules.length > 0
+                    ? 'text-amber-900 bg-amber-100 hover:bg-amber-200 font-bold'
+                    : 'text-stone-700 hover:text-stone-950 hover:bg-stone-200/70'
+                }`}
                 title="Open Optional Modules Drawer"
               >
-                <Boxes className="w-3.5 h-3.5 text-stone-500" />
-                <span>Modules</span>
+                <Boxes className={`w-3.5 h-3.5 ${activeModules.length > 0 ? 'text-amber-600' : 'text-stone-500'}`} />
+                <span>Modules ({activeModules.length})</span>
               </button>
               <button
                 onClick={handleCopy}
@@ -466,14 +547,14 @@ export default function PromptCard({ prompt, index }) {
             }`}
           >
             <pre className="leading-relaxed whitespace-pre font-mono">
-              <code>{activeData.content}</code>
+              <code>{finalContent}</code>
             </pre>
           </div>
 
           {/* Codeblock Bottom Bar */}
           <div className="flex items-center justify-between px-4 py-2 border-t border-stone-200/80 bg-[#EEEEEC]">
             <span className="text-xs text-stone-500 font-mono">
-              {lines.length} lines · {activeData.tokens.toLocaleString()} tokens ({activeData.version})
+              {lines.length} lines · {finalTokens.toLocaleString()} tokens ({activeData.version}){activeModules.length > 0 ? ` (+${activeModulesTokens.toLocaleString()} modular)` : ''}
             </span>
             <button
               onClick={() => setIsExpanded(!isExpanded)}
@@ -506,7 +587,7 @@ export default function PromptCard({ prompt, index }) {
 
           {/* Right Slide-Over Panel */}
           <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
-            <div className="w-screen max-w-md bg-white border-l border-stone-200 shadow-2xl flex flex-col transform transition ease-in-out duration-300">
+            <div className="w-screen max-w-lg bg-white border-l border-stone-200 shadow-2xl flex flex-col transform transition ease-in-out duration-300">
               {/* Drawer Top Bar */}
               <div className="p-4 sm:p-5 border-b border-stone-200 bg-[#EEEEEC] flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
@@ -523,7 +604,7 @@ export default function PromptCard({ prompt, index }) {
                       </span>
                     </div>
                     <p className="text-[11px] text-stone-500 font-sans">
-                      Modular add-ons & system prompt extensions
+                      Plug-and-play extensions attached dynamically to your prompt
                     </p>
                   </div>
                 </div>
@@ -539,59 +620,171 @@ export default function PromptCard({ prompt, index }) {
 
               {/* Drawer Content */}
               <div className="p-5 flex-1 overflow-y-auto space-y-4 font-sans">
-                <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50/70 p-4 text-center">
-                  <div className="w-10 h-10 rounded-xl bg-white border border-stone-200 flex items-center justify-center text-stone-700 mx-auto mb-2.5 shadow-2xs">
-                    <Puzzle className="w-5 h-5 text-stone-800" />
-                  </div>
-                  <h4 className="text-xs font-bold text-stone-900 mb-1">
-                    Module Vault
-                  </h4>
-                  <p className="text-[11px] text-stone-600 leading-relaxed max-w-xs mx-auto">
-                    Optional prompt modules and subsystem extensions will be listed here. You will be able to toggle and attach them directly to your system prompt.
-                  </p>
-                </div>
+                {availableModules.length > 0 ? (
+                  <>
+                    {/* Quick Action Toolbar */}
+                    <div className="p-3 rounded-xl bg-stone-50 border border-stone-200 flex items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${activeModules.length > 0 ? 'bg-emerald-500' : 'bg-stone-400'}`} />
+                        <span className="font-semibold text-stone-900">
+                          {activeModules.length} of {availableModules.length} Active
+                        </span>
+                        {activeModulesTokens > 0 && (
+                          <span className="text-[11px] font-mono text-stone-500 font-bold">
+                            (+{activeModulesTokens.toLocaleString()} tok)
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={selectAllModules}
+                          className="px-2 py-1 rounded-lg text-[11px] font-semibold bg-white border border-stone-200 hover:bg-stone-100 text-stone-700 transition-colors cursor-pointer"
+                        >
+                          Select All
+                        </button>
+                        <button
+                          onClick={deselectAllModules}
+                          className="px-2 py-1 rounded-lg text-[11px] font-semibold bg-white border border-stone-200 hover:bg-stone-100 text-stone-700 transition-colors cursor-pointer"
+                        >
+                          Clear All
+                        </button>
+                      </div>
+                    </div>
 
-                {/* Placeholder Module Slots Preview */}
-                <div className="space-y-2.5">
-                  <div className="text-[11px] font-bold uppercase tracking-wider text-stone-400 font-mono">
-                    Available Slots
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-[#F7F7F5] border border-stone-200 shadow-2xs flex items-center justify-between opacity-70">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-2 h-2 rounded-full bg-stone-400" />
-                      <div>
-                        <span className="text-xs font-semibold text-stone-800 block">Module Slot #1</span>
-                        <span className="text-[10px] text-stone-500">Optional subsystem extension</span>
-                      </div>
+                    {/* Modules List */}
+                    <div className="space-y-3">
+                      {availableModules.map((module) => {
+                        const isActive = activeModuleIds.includes(module.id);
+                        const isPreviewOpen = expandedPreviewIds.includes(module.id);
+
+                        return (
+                          <div
+                            key={module.id}
+                            className={`p-4 rounded-xl border transition-all shadow-2xs ${
+                              isActive
+                                ? 'bg-amber-50/40 border-amber-300 ring-1 ring-amber-300/60'
+                                : 'bg-white border-stone-200 hover:border-stone-300'
+                            }`}
+                          >
+                            {/* Card Top Metadata */}
+                            <div className="flex items-start justify-between gap-2 mb-1.5">
+                              <div className="flex flex-wrap items-center gap-1.5">
+                                <span className="px-2 py-0.5 rounded text-[9px] font-bold font-mono uppercase tracking-wider bg-stone-100 text-stone-700 border border-stone-200">
+                                  {module.category}
+                                </span>
+                                <span className="px-2 py-0.5 rounded text-[10px] font-bold font-mono bg-stone-900 text-amber-300">
+                                  +{module.tokens.toLocaleString()} tokens
+                                </span>
+                              </div>
+
+                              {/* Direct Add / Remove Button */}
+                              <button
+                                onClick={() => toggleModule(module.id)}
+                                className={`px-3 py-1 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-2xs active:scale-95 shrink-0 ${
+                                  isActive
+                                    ? 'bg-red-50 hover:bg-red-100 text-red-700 border border-red-200'
+                                    : 'bg-stone-900 hover:bg-black text-white'
+                                }`}
+                              >
+                                {isActive ? (
+                                  <>
+                                    <Trash2 className="w-3 h-3 text-red-600" />
+                                    <span>Remove</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Plus className="w-3 h-3 text-amber-300" />
+                                    <span>Add Module</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+
+                            {/* Title & Description */}
+                            <h4 className="font-bold text-xs text-stone-900 font-sans mt-2">
+                              {module.name}
+                            </h4>
+                            <p className="text-[11px] text-stone-600 leading-relaxed mt-1">
+                              {module.description}
+                            </p>
+
+                            {/* Card Footer: Code Preview Toggle & Copy Snippet */}
+                            <div className="mt-3 pt-2.5 border-t border-stone-100 flex items-center justify-between gap-2">
+                              <button
+                                onClick={() => togglePreview(module.id)}
+                                className="text-[11px] font-medium text-stone-500 hover:text-stone-800 flex items-center gap-1 cursor-pointer transition-colors"
+                              >
+                                {isPreviewOpen ? (
+                                  <>
+                                    <EyeOff className="w-3 h-3 text-stone-400" />
+                                    <span>Hide XML Snippet</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Eye className="w-3 h-3 text-stone-400" />
+                                    <span>Preview XML Snippet</span>
+                                  </>
+                                )}
+                              </button>
+
+                              <button
+                                onClick={() => handleCopyModuleSnippet(module.id, module.content)}
+                                className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-stone-50 border border-stone-200 hover:bg-stone-100 text-stone-700 transition-colors flex items-center gap-1 cursor-pointer"
+                                title="Copy module XML directly"
+                              >
+                                {copiedModuleId === module.id ? (
+                                  <>
+                                    <Check className="w-2.5 h-2.5 text-emerald-600" />
+                                    <span className="text-emerald-700">Copied</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Copy className="w-2.5 h-2.5 text-stone-400" />
+                                    <span>Copy Snippet</span>
+                                  </>
+                                )}
+                              </button>
+                            </div>
+
+                            {/* Expandable XML Preview Box */}
+                            {isPreviewOpen && (
+                              <div className="mt-2.5 p-3 rounded-lg bg-[#F7F7F5] border border-stone-200 overflow-hidden font-mono text-[10px] text-stone-800 max-h-48 overflow-y-auto">
+                                <pre className="whitespace-pre font-mono leading-relaxed">
+                                  <code>{module.content}</code>
+                                </pre>
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
                     </div>
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-stone-200/80 text-stone-600">
-                      Standby
-                    </span>
-                  </div>
-                  <div className="p-3.5 rounded-xl bg-[#F7F7F5] border border-stone-200 shadow-2xs flex items-center justify-between opacity-70">
-                    <div className="flex items-center gap-2.5">
-                      <span className="w-2 h-2 rounded-full bg-stone-400" />
-                      <div>
-                        <span className="text-xs font-semibold text-stone-800 block">Module Slot #2</span>
-                        <span className="text-[10px] text-stone-500">Optional subsystem extension</span>
-                      </div>
+                  </>
+                ) : (
+                  <div className="rounded-xl border border-dashed border-stone-300 bg-stone-50/70 p-4 text-center">
+                    <div className="w-10 h-10 rounded-xl bg-white border border-stone-200 flex items-center justify-center text-stone-700 mx-auto mb-2.5 shadow-2xs">
+                      <Puzzle className="w-5 h-5 text-stone-800" />
                     </div>
-                    <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded bg-stone-200/80 text-stone-600">
-                      Standby
-                    </span>
+                    <h4 className="text-xs font-bold text-stone-900 mb-1">
+                      No Modules Registered Yet
+                    </h4>
+                    <p className="text-[11px] text-stone-600 leading-relaxed max-w-xs mx-auto">
+                      Optional subsystem extensions for {prompt.model} will appear here when configured.
+                    </p>
                   </div>
-                </div>
+                )}
               </div>
 
               {/* Drawer Bottom Bar */}
               <div className="p-4 border-t border-stone-200 bg-[#EEEEEC] flex items-center justify-between font-mono text-xs text-stone-600">
                 <div className="flex items-center gap-1.5">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
-                  <span className="font-semibold text-stone-800">0 Modules Active</span>
+                  <span className={`w-2 h-2 rounded-full ${activeModules.length > 0 ? 'bg-emerald-500' : 'bg-stone-400'}`} />
+                  <span className="font-semibold text-stone-800">
+                    {activeModules.length} Modules Attached ({finalTokens.toLocaleString()} tot tok)
+                  </span>
                 </div>
                 <button
                   onClick={() => setIsModulesOpen(false)}
-                  className="px-3.5 py-1.5 rounded-lg bg-stone-900 hover:bg-black text-white text-xs font-semibold font-sans cursor-pointer transition-colors shadow-2xs"
+                  className="px-4 py-1.5 rounded-lg bg-stone-900 hover:bg-black text-white text-xs font-semibold font-sans cursor-pointer transition-colors shadow-2xs"
                 >
                   Done
                 </button>

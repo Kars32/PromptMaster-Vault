@@ -28,6 +28,24 @@ for (const [suite, promptList] of Object.entries(PROMPTS)) {
       lineCount
     });
 
+    if (p.modules && p.modules.length > 0) {
+      for (const m of p.modules) {
+        const mText = m.content;
+        const mCl100k = encodeCl100k(mText).length;
+        const mO200k = encodeO200k(mText).length;
+        results.push({
+          suite: suite.toUpperCase(),
+          id: p.id,
+          title: ` ├─ [Module] ${m.name}`,
+          cl100kTokens: mCl100k,
+          o200kTokens: mO200k,
+          charCount: mText.length,
+          wordCount: mText.trim().split(/\s+/).length,
+          lineCount: mText.split('\n').length
+        });
+      }
+    }
+
     if (p.history && p.history.length > 0) {
       for (const h of p.history) {
         const hText = h.content;
