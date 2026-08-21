@@ -150,6 +150,26 @@ export default function App() {
                     Nvidia Prompts (1)
                     <ArrowRight className="w-4 h-4 text-stone-400" />
                   </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('poolside');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    Poolside Prompts (1)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('tencent');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    Tencent Prompts (1)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
                 </div>
               </div>
 
@@ -224,14 +244,23 @@ export default function App() {
             </div>
           )}
 
-          {/* TAB 2, 3, 4 & 5: GEMINI, CLAUDE, DEEPSEEK & NVIDIA */}
-          {(activeTab === 'gemini' || activeTab === 'claude' || activeTab === 'deepseek' || activeTab === 'nvidia') && (
+          {/* PROMPT SUITES: GEMINI, CLAUDE, DEEPSEEK, NVIDIA, POOLSIDE, TENCENT */}
+          {activeTab !== 'overview' && activeTab !== 'mimo' && (
             <div>
               {/* Header & Search */}
               <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h1 className="text-2xl font-extrabold text-stone-900 capitalize">
-                    {activeTab === 'nvidia' ? 'NVIDIA' : activeTab} Roleplay Prompts
+                  <h1 className="text-2xl font-extrabold text-stone-900">
+                    {activeTab === 'nvidia'
+                      ? 'NVIDIA'
+                      : activeTab === 'deepseek'
+                      ? 'DeepSeek'
+                      : activeTab === 'poolside'
+                      ? 'Poolside'
+                      : activeTab === 'tencent'
+                      ? 'Tencent'
+                      : activeTab.charAt(0).toUpperCase() + activeTab.slice(1)}{' '}
+                    Roleplay Prompts
                   </h1>
                   <p className="text-xs text-stone-500 mt-0.5">
                     {currentPrompts.length} prompt architectures available
