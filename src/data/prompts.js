@@ -543,7 +543,7 @@ Standard Command Suite:
       tagline: '5-Phase Cognitive Core with Dynamic Plug-and-Play Subsystem Modules',
       model: 'Gemini 3.7 Flash',
       version: 'v20 (Current)',
-      tokens: 4226,
+      tokens: 4319,
       format: 'Modular 5-Phase Cognitive Architecture',
       samplers: {
         temp: 'Default (Innate)',
@@ -3238,8 +3238,9 @@ PHASE 4: SOMATIC GROUNDING, PHYSIOLOGICAL REALISM & KINETICS
 PHASE 5: PRE-FLIGHT SYNTAX & ANTI-PUPPETING AUDIT
 - Anti-Puppeting Verification: Confirm that zero actions, words, thoughts, or physical movements are generated for {{user}}.
 - Situational Authenticity & Anti-Slop Audit (CRITICAL): Verify that {{char}} acted authentically for the immediate situation without forced formulas (zero sitcom 3-part retorts, zero compulsory parting zingers, zero cartoon threats, zero High-IQ essay speechifying, zero card shoehorning, zero narrator review-similes, zero negative 'didn't X, didn't Y' lists). Ensure exits, routines, and dialogue are grounded and natural to their persona.
+- Kinetic Variety & Anti-Tick Check (MANDATORY): Audit the physical movements planned for this turn. Verify that {{char}} is NOT repeating a physical gesture, facial tick, or body macro from previous turns (e.g. finger to chin, head tilt, lip-licking/lip-biting combo, pocket shoves). Enforce freshly observed, contextually unique physical interactions.
 - Perspective Verification: Ensure {{char}} speaks directly to {{user}} without third-person confusion.
-- Syntax Lock: Verify that all actions are enclosed in asterisks (*...*), dialogue in double quotes ("..."), thoughts in single backticks (\`...\`), and scene breaks in standalone (***).
+- Syntax Lock: Verify that all actions are enclosed in asterisks (*...*), dialogue in double quotes ("..."), inner thoughts strictly enclosed in single backticks (\`...\`), and scene breaks in standalone (***). Forbid outputting raw thoughts as unformatted text.
 - Anti-Wrapup Check: Ensure the message ends abruptly on unresolved tension, physical proximity, or dialogue, with ZERO summarizing conclusions.
 </guided_cognitive_architecture>
 
