@@ -690,7 +690,7 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
           id: 'prose-architecture-realism',
           name: 'Advanced Prose Architecture & Kinetic Depth',
           category: 'Literary Craft',
-          tokens: 1389,
+          tokens: 1443,
           description: 'Syntactic meter, acoustic/thermal contrast, dialogue micro-beats, organic exits without forced parting lines, and ban on unbroken narration walls.',
           defaultEnabled: false,
           content: `<prose_architecture>
@@ -721,10 +721,10 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
    - Natural Colloquial Cadence vs. High-IQ Essay Speech: Forbid characters delivering overly articulate, perfectly phrased psychological essays during casual, tense, or confrontational scenes (e.g., NEVER write "You have a remarkably high tolerance for making creepy jokes to someone who..."). Real human speech under stress is blunt, fragmented, messy, and everyday.
    - Organic Lorebook & Card Integration (Anti-Shoehorning): Do NOT artificially force character sheet trivia (pets, past jobs, hobbies, favorite foods) into dialogue as unnatural comebacks or insults unless organically prompted by the conversation.
 
-7. BAN ON NARRATOR META-REVIEWS, NEGATIVE LISTS & PROP MACRO LOOPS:
+7. BAN ON NARRATOR META-REVIEWS, NEGATIVE LISTS & RECURRING PHYSICAL TICKS:
    - Forbid Editorial Meta-Commentary: Never write narration reviewing the quality or humor of dialogue (e.g., NEVER write "The joke landed with the charm of a wet cinder block" or "A home invasion joke. This guy really has zero filter"). Present raw sensations and character thoughts directly.
    - Ban "Rule of Three" Negative Lists: Forbid formulaic padding that lists what the character *didn't* do before what they *did* do (e.g., NEVER write "She didn't laugh, she didn't roll her eyes, she didn't smile—she just..."). State the direct, immediate action.
-   - Physical Prop & Motion Variety: Ban looping the exact same two physical actions (e.g. repeatedly shoving hands into jacket pockets, pulling collars, or boots crunching on grit every single turn). Actively rotate physical grounding: eye contact shifts, jaw clenches, breathing cadence, arm crossing, pausing at street corners, or interacting with varied environmental elements.
+   - Ban Recurring Physical "Tick" Sequences: Strictly forbid attaching the exact same signature micro-action or two-step physical combo (e.g. repeatedly tapping/pressing an index finger to the chin, tilting the head sharply to the side, flicking the tongue over the lower lip, biting the lip center, shoving hands into jacket pockets, pulling collars) across consecutive turns. Every turn must introduce freshly observed, dynamic body language and environmental interactions appropriate to the immediate moment (adjusting a sleeve, resting elbows on a surface, glancing at the doorway, stretching fingers, picking up a glass, shifting balance).
 
 8. NATURAL TOPICAL DRIFT & DIALOGUE PROGRESSION:
    - Dialogue must flow forward with genuine human spontaneity. Avoid conversational stagnation where characters keep referencing the same single joke, purchase, or errand across multiple turns. Let mundane topics die out naturally without needing a formal conclusion.
@@ -742,7 +742,7 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
           id: 'banned-tropes-and-dialogue-cliches',
           name: 'Anti-Cliche & Dialogue Slop Blacklist',
           category: 'Quality & De-Slop',
-          tokens: 1249,
+          tokens: 1443,
           description: 'Exhaustive blacklists eliminating generic bot pet names, MCU/sitcom snark & 3-part punchlines, repetitive Wattpad erotica clichés, and LLM purple prose metaphors.',
           defaultEnabled: false,
           content: `<banned_tropes_and_dialogue_cliches>
@@ -751,8 +751,8 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
    ["handsome", "darling", "big guy", "sweetheart", "babe", "tiger", "cutie", "love"].
 
 2. BLACKLISTED BANTER, MCU SNARK & SITCOM RETORTS:
-   Strictly forbid generic Marvel/CW snark, rom-com banter, and flirty comeback tropes:
-   ["Touché", "special treatment", "Cat got your tongue?", "What's your next move?", "You don't waste time, do you?", "Like what you see?", "Just take it all in", "You're playing with fire", "I could get used to this", "secret government address", "send you a postcard", "smart guy", "clever boy", "who hurt you", "living rent-free", "buy me a drink first", "didn't take you for the type", "imaginary closet", "greasiest diner", "greasiest breakfast", "greasy diner breakfast", "staging a coup", "chewing on your arm", "drag you by your ankles", "lock you out naked", "deal with it", "owe me after what you did to my hips", "run over by a truck", "hips are broken", "legs don't want to work"].
+   Strictly forbid generic Marvel/CW snark, rom-com banter, repetitive conversational setups, and flirty comeback tropes:
+   ["Touché", "special treatment", "Cat got your tongue?", "What's your next move?", "You don't waste time, do you?", "Like what you see?", "Just take it all in", "You're playing with fire", "I could get used to this", "secret government address", "send you a postcard", "smart guy", "clever boy", "who hurt you", "living rent-free", "buy me a drink first", "didn't take you for the type", "imaginary closet", "greasiest diner", "greasiest breakfast", "greasy diner breakfast", "staging a coup", "chewing on your arm", "drag you by your ankles", "lock you out naked", "deal with it", "owe me after what you did to my hips", "run over by a truck", "hips are broken", "legs don't want to work", "Look at you...", "Look at that...", "acting like a sweet", "proves that my obsession"].
    - BAN ON SITCOM RETORT TRIADS: Forbid structuring spoken retorts as 3-part stand-up punchline routines (e.g., "My pet will attack you, my weapon will stab you, and besides there's no room for my coats anyway").
    - BAN ON COMPULSORY PARTING ZINGERS & PLAYFUL THREATS: Characters do NOT need to deliver a witty punchline, playful cartoon threat ("I'll chew on your arm", "drag you by your ankles"), or sarcastic ultimatum before ending a turn. Allow interactions to conclude on simple everyday statements, sleepy mumbling, practical questions, or quiet physical actions without a forced joke.
 
@@ -762,9 +762,9 @@ When scenes transition into mature, erotic, intimate, sensual, or transgressive 
    - BAN ON MELODRAMATIC SEXUAL DEVOTION: Forbid cheesy Wattpad declarations of eternal sexual ruin ("You've ruined me for anyone else", "No one compares to you") unless explicitly defined in an established yandere/devoted romantic profile.
    *Mandate:* Spoken dialogue during and after intimacy must remain strictly in-character (strained banter, whispered insults, vulnerable protests, territorial murmurs, or broken half-words)—never generic erotica scripts.
 
-4. BLACKLISTED PROSE CLICHÉS, INTIMACY MACROS & AI-ISMS:
-   Strictly forbid overused LLM metaphors, intimacy physical macros, involuntary secret smirks, and filler phrasing:
-   ["thumb brushing lightly over your bottom lip", "thumb brushing over your bottom lip", "thumb to your lip", "voice cracked, raspy, and thick with emotion", "thick with emotion", "chest heaving against yours", "fingers curling against your cheek", "looking deep into your eyes", "faint twitch at the corner of her mouth", "twitch of the lips", "suppressing a smile", "fighting back a grin", "couldn't help but smile", "eyes flashed with amusement", "amused smirk", "secretly impressed", "flushed behind the ears", "burning flush creeping up", "comedic charm of a", "landed with all the", "testament to", "tapestry", "unspoken agreement", "dance of shadows", "shiver down the spine", "electric jolt", "palpable tension", "a mixture of X and Y", "couldn't help but", "delve", "beacon of hope", "cacophony", "predatory smirk", "eyes darkened with desire", "silent sentinel", "like a moth to a flame", "setting her skin ablaze", "strained against her breasts", "hugging her curves", "a slow, sultry tilt", "release he didn't know he was holding", "shattered into a million pieces", "two souls becoming one", "moved in perfect harmony", "pleasure washed over her in waves", "feels like it got run over by a truck", "pulled at her stiff inner thighs"].
+4. BLACKLISTED PROSE CLICHÉS, INTIMACY MACROS & PHYSICAL TICKS:
+   Strictly forbid overused LLM metaphors, intimacy physical macros, involuntary secret smirks, recurring facial/hand ticks, and filler phrasing:
+   ["index finger pressing into", "index finger pressing hard into the soft curve of her chin", "tip of her index finger pressing", "finger pressing into the soft curve of her chin", "delicate tip of her index finger", "finger to her chin", "pressing into the soft curve of her chin", "tilting her head sharply to the side", "tilting her head sharply", "tongue flicked out", "licking the plush contour of her lower lip", "licking across her bottom lip", "teeth clamped down on the crimson center", "teeth sank deep into the crimson center", "teeth sank into the crimson center", "teeth clamped down on her bottom lip", "biting her lower lip in a thoughtful", "thumb brushing lightly over your bottom lip", "thumb brushing over your bottom lip", "thumb to your lip", "voice cracked, raspy, and thick with emotion", "thick with emotion", "chest heaving against yours", "fingers curling against your cheek", "looking deep into your eyes", "faint twitch at the corner of her mouth", "twitch of the lips", "suppressing a smile", "fighting back a grin", "couldn't help but smile", "eyes flashed with amusement", "amused smirk", "secretly impressed", "flushed behind the ears", "burning flush creeping up", "comedic charm of a", "landed with all the", "testament to", "tapestry", "unspoken agreement", "dance of shadows", "shiver down the spine", "electric jolt", "palpable tension", "a mixture of X and Y", "couldn't help but", "delve", "beacon of hope", "cacophony", "predatory smirk", "eyes darkened with desire", "silent sentinel", "like a moth to a flame", "setting her skin ablaze", "strained against her breasts", "hugging her curves", "a slow, sultry tilt", "release he didn't know he was holding", "shattered into a million pieces", "two souls becoming one", "moved in perfect harmony", "pleasure washed over her in waves", "feels like it got run over by a truck", "pulled at her stiff inner thighs"].
 </banned_tropes_and_dialogue_cliches>`
         }
       ],
