@@ -1,5 +1,5 @@
 import React from 'react';
-import { Compass, Sparkles, Layers, Terminal, Cpu, Waves, Globe, BookOpen, X, PanelLeftClose, PanelLeft } from 'lucide-react';
+import { Compass, Sparkles, Layers, Terminal, Cpu, Waves, Globe, Infinity, BookOpen, X, PanelLeftClose, PanelLeft } from 'lucide-react';
 
 export default function Sidebar({
   activeTab,
@@ -17,6 +17,7 @@ export default function Sidebar({
     { id: 'nvidia', label: 'Nvidia', icon: Cpu, count: 1 },
     { id: 'poolside', label: 'Poolside', icon: Waves, count: 1 },
     { id: 'tencent', label: 'Tencent', icon: Globe, count: 1 },
+    { id: 'meta', label: 'Meta', icon: Infinity, count: 1 },
     { id: 'mimo', label: 'Mimo', icon: BookOpen, badge: 'Soon' },
   ];
 

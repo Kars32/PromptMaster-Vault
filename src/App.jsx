@@ -105,7 +105,7 @@ export default function App() {
                   Tested System Prompts for Modern LLMs
                 </h1>
                 <p className="text-stone-600 text-sm sm:text-base leading-relaxed max-w-2xl mb-6">
-                  High-quality system prompts tailored for <strong>Gemini</strong>, <strong>Claude</strong>, <strong>DeepSeek</strong>, <strong>Nemotron</strong>, <strong>Laguna</strong>, and <strong>Hunyuan</strong> in <strong>SillyTavern</strong>, <strong>Janitor AI</strong>, and OpenRouter. They enforce strict anti-puppeting, preserve emotional inertia, and produce natural, uninhibited prose.
+                  High-quality system prompts tailored for <strong>Gemini</strong>, <strong>Claude</strong>, <strong>DeepSeek</strong>, <strong>Nemotron</strong>, <strong>Laguna</strong>, <strong>Hunyuan</strong>, and <strong>Meta / Muse Spark</strong> in <strong>SillyTavern</strong>, <strong>Janitor AI</strong>, and OpenRouter. They enforce strict anti-puppeting, preserve emotional inertia, and produce natural, uninhibited prose.
                 </p>
 
                 {/* Direct Action Buttons */}
@@ -168,6 +168,16 @@ export default function App() {
                     className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
                   >
                     Tencent Prompts (1)
+                    <ArrowRight className="w-4 h-4 text-stone-400" />
+                  </button>
+                  <button
+                    onClick={() => {
+                      setActiveTab('meta');
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }}
+                    className="px-5 py-2.5 rounded-xl border border-stone-200 bg-white hover:bg-stone-50 text-stone-800 font-bold text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-2 active:scale-95"
+                  >
+                    Meta Prompts (1)
                     <ArrowRight className="w-4 h-4 text-stone-400" />
                   </button>
                 </div>
